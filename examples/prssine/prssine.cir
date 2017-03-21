@@ -1,0 +1,34 @@
+* Mixed Signal Simulation Demo Project - Digital Sine Generator with 8-bit PRS and a Low-Pass Filter, <uros@isotel.eu>
+
+.include ../../yosys/prim_cells_ngspice.mod
+.include prsgen8_ngspice.mod
+.include lpf.mod
+
+* A/D and D/A Bridge Models
+.model adc_buff adc_bridge(in_low = 0.8 in_high=2)
+.model dac_buff dac_bridge(out_high = 5)
+
+* Analog Stimulus 1 MHz clock with one cycle reset pulse
+Vclk clk 0 PULSE(0 4.9 500ns 50ns 50ns 438.28ns 976.56ns)
+Vrst rst 0 PULSE(0 4.9 0 50ns 50ns 2us)
+
+* Digital Stimulus with 8-bit Sine Input
+.model sine_stimulus d_source(input_file = "sine.ssv")
+Asine [s7 s6 s5 s4 s3 s2 s1 s0] sine_stimulus
+
+* PRS Generator with LPF and D/A Bridge
+Xprs dclk drst s0 s1 s2 s3 s4 s5 s6 s7 dprsout prsgen8
+Aad [clk rst] [dclk drst] adc_buff
+Ada [dprsout] [prsout] dac_buff
+
+Xlpf1 prsout out lpf fc=1e3 zeta=0.7 lval=10mH
+
+.control
+tran 10ns 50ms uic
+plot v(clk)+10 v(rst)+15 v(prsout)+5 v(out)
+
+linearize v(out)
+fft v(out)
+plot mag(out) ylog
+.endc
+.end
