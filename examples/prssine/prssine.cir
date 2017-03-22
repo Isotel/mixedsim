@@ -21,7 +21,7 @@ Xprs dclk drst s0 s1 s2 s3 s4 s5 s6 s7 dprsout prsgen8
 Aad [clk rst] [dclk drst] adc_buff
 Ada [dprsout] [prsout] dac_buff
 
-Xlpf1 prsout out lpf fc=1e3 zeta=0.7 lval=10mH
+Xlpf1 prsout out lpf fc=1e3 zeta=1.05 lval=10mH
 
 .control
 tran 10ns 50ms uic

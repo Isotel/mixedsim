@@ -3,7 +3,7 @@
 .include lpf.mod
 
 Vac sine 0 AC 1 DC 0 PULSE(0 1 0ns, 10ns, 10ns 1s 1s)
-Xlpf sine out lpf fc=1e3 zeta=0.7 lval=10mH
+Xlpf sine out lpf fc=1e3 zeta=1.05 lval=10mH
 
 .control
 ac dec 100 0.1 1e6
