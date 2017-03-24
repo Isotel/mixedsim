@@ -9,4 +9,4 @@ include Verilog and other languages too. Such solutions are provided by commerci
 packages each having some benefits and drawbacks. Here we represent an open-source
 free to use solution thanks to open-source projects which runs on all systems.
 
-More info about the project: http://www.isotel.eu/blog/mixedsig-intro/index.html
+More info about the project: http://www.isotel.eu/mixedsig/intro
