@@ -1,217 +1,193 @@
-#usage "Mixed Signal ngSpice Simulator Export, Version 1.3, 25/03/2017 by Uros Platise, http://www.isotel.eu/mixedsim\n"
+#usage "<h1>Simulate Real Eagle Schematics with Mixed Signal ngSpice</h1>"
+        "Version 1.3, 25/03/2017, (c) 2012-2017 Uros Platise, http://www.isotel.eu/mixedsim\n"
+        "<p><ul>"
+        "Run as: <b>run ngspice</b> [<i>outfile</i> [<i>sheet number</i>]]</ul><p>"
+"The ngspice, http://ngspice.org, is a mixed signal simulator "
+"embedding spice3f5 (analog), xspice (mixed signal), tclspice (scripting), "
+"and allows inclusion of the Verilog-AMS models as well as simulation with the Verilog/VHDL via Yosys synthesis. "
+"The xspice adds over 40+ mixed signal analog/digital components to the basic spice. By using "
+"CodeModels that can be expanded to your custom models written in C. "
+"<p>"
+"Purpose of this ngspice script is use it in natural way with real circuits, instead of copying and redrawing "
+"for simulation purposes only."
+"Netlists are extracted as top or as sub-circuits on detection of at least one "
+"sub-circuit port element from the ngspice.lbr."
+"In this case script will generate a sub-circuit in a file with .mod extension. "
+"Otherwise schematics is extract as top-level circuit with .cir extension."
+"One may specify a filename to be different with the first argument in a command line, and "
+"optionally it may select a sheet by its number to selectively export only part of the circuit."
 
-/* ngspice.ulp, Simulate Real Eagle Schematics with Mixed Signal ngSpice Simulator
- *
- * The ngspice, http://ngspice.org, is a mixed signal simulator
- * embedding spice3f5 (analog), xspice (mixed signal), tclspice (scripting), 
- * and allows inclusion of the Verilog-AMS models. The xspice adds over 40+
- * mixed signal analog/digital components to the basic spice. By using 
- * CodeModels that can be expanded to your custom models written in C.
- *
- * Purpose of this ngspice script is use it in natural way with real circuits,
- * which netlists are extracted as, preferebly, as sub-circuits, and are then
- * placed in top-level circuits as units under test (UUT).
- *
- * Upon detection of at least one sub-circuit port element from the ngspice.lbr 
- * thisscript will generate a sub-circuit in a file .mod, otherwise as top-level
- * circuit. Transistors, mosfets, integrated circuits are treated in natural
- * spice way: all primitive elements may be given extra model description, and
- * integrated circuits are included as sub-circuits. So one component (eagle
- * schematics) can be instiantiated into the other circuit in a hierarchical way.
- *
- * Read this manual to understand how eagle schematics is converted to a
- * ngspice language.
- *
- *
- * ChangeLog
- * =========
- *
- *  Version 1.3, 25th March 2017
- *  - Control of parameters from top-level circuit
- *
- *  Version 1.2, 2016
- *  - Added support for code models, mixed signal digital simulation
- *
- *  Version 1.0, 9. March 2014
- *  - Extended to sub-circuits, inclusion of custom includes, lib and models via
- *  - Eagle attribute directive.
- *
- *  Version 1.0, 22. August, 2012
- *  -  First release for top-level circuit used with ngspice-24
- *
- *
- * Top Level Design or a Sub-Circuit Model
- * =======================================
- *
- * A schematics may represent a top-level design exported as .cir, or a sub-circuit
- * model exported as .mod if there is at least one SPICE-PORT instance present from
- * the ngspice.lbr.
- *
- * Top-level design may be run directly while sub-circuit should be instantiated in
- * another circuit, manually in a spice file, or as a component in another eagle
- * schematics offering manual hierachical modeling.
- *
- * When a top-level schematics is converted in addition the following applies:
- *  - Auto Generated Sources, are enabled, which are otherwise disabled.
- *
- * The first line in the spice netlist should represent the title, which is
- * exported out of the following global attributes:
- *  - TITLE, should represent the full description schematic title, and can be placed as >TITLE on your sch
- *  - DOCNUM, optional parameter and is printed out in ( ... ) after the TITLE,
- *  - AUTHOR, the main (or the first) author of the schematics
- *  - CONFIRMED, the responsible person in charge to confirm the schematics (co-author)
- *
- *
- * Net Labeling
- * ============
- *
- *  1. Net names N$<....> numbered by Eagle are converted as primitive numbers without N$ prefix
- *  2. The net name GND, is converted to 0
- *  3. Other exception to these rules are nets defined as +5V, -5V, +12V
- *     which are converted to +5V -> dcp5v, -5V -> dcn5v, dcp12v -> dcn12v with
- *     automatically generated DC supply.
- *  4. Other nets are left as on original schematics. You may use any string to
- *     mark a net name, as sum, bus, vin, vout, adout, instead of using numbers.
- * 
- *
- * Auto-Generated Sources
- * ======================
- *
- * When schematics is drawn as a top-level design without any spice port placed,
- * then the following rules apply:
- *
- *  1. Net names defined as +5V, -5V, +12V, which are converted to netnames 
- *     as +5V -> dcp5v, -5V -> dcn5v, +12V -> dcp12v have automatically added DC voltage sources.
- *
- *
- * Primitive (Built-in) Elements
- * =============================
- *
- *  1. Primitive elements are all Spice basic elements, as supplied in the ngspice.lbr.
- *  2. Value is appended at the end of initial declaration, i.e. <name> <nets> <value>
- *
- *
- * Code Models
- * ===========
- *
- *  1. Used with the default assignment A<...>, or when attribute spice_cm = ... is given
- *     then the prefix A<...> is used.
- *  2. In addition code model definition typically needs a more specific part declaration
- *     that may be added with the spice_model = ... attribute.
- *
- *
- * Sub-Circuits
- * ============
- *
- *  1. Any non-primitive element is treated as a sub-circuit when it is named as X<...>
- *     and it generates an .include statement to include that sub-circuit
- *  2. SPICE_DEVICE="X" can be used to set a device a sub-circuit.
- *     In spice code it will appear as XU1 ... if on eagle schematics its name is U1 
- *  3. Auto appended prefixes:
- *       - IC* -> XIC*  example: IC1 will convert as XIC1
- *  4. If additional Attribute is given SPICE_INCLUDE = ... then it overrides the above default
- *  5. Pin numbers define the net order in X<...> net@pin1 net@pin2 <value>
- *
- *
- * Ignoring Parts
- * ==============
- *
- *  1. Part can be ignored by placing a SPICE_IGNORE attribute to the part or by adding
- *     a string to a value as "open" or "unused" case insensitive. In all these cases parts
- *     will be ignored. Note that SPICE_VALUE overrides the default value of the part.
- *
- *  2. When generating sub-circuit use SPICE_IGNORE, the open or unused is not handled there,
- *     since it represents a net.
- *
- *
- * Schematics as a Sub-circuit
- * ===========================
- *
- *  1. Placing a port from ngspice.lbr with value will create the circuit as a sub-circuit, where
- *     port name defines the pin number and its value a net. Make sure that net matches actual
- *     net name. Port does not need to be bind to the net itself, since only value matters, but
- *     to make the schematics clear, you should connect it.
- *  2. Pin names must be correctly ordered PIN1, PIN2, PIN3, ... etc., however if one is missing
- *     such as PIN1, PIN3, PIN4, ngspice would skip that and produce the interface for the three pins only
- *  3. Add SPICE_REM attribute to describe pin, which information is added to the sub-circuit header
- *  4. Any part value which is of form "{param}=default" will be added to the subcircuit parameter list as
- *     .subckt ... param=default, and within the circuit value as {param} will be passed. 
- *     More than just one part may use {param} but only one with the default value.
- *     Examples:
- *      - R1 has value {rin}=1k and R2 has value {2*rin}
- *
- *
- * Additional Spice Declarations
- * =============================
- *
- *  1. Control directives, which are placed at the end of the file generated are
- *     to be placed on the layer with name "spice" or "ngspice" or "ngspice-control".
- *  2. Control directives, which are placed at the beginning of the file, are to
- *     be placed on the layer with name "ngspice-init"
- *
- *
- * ngSpice Installation under Cygwin
- * =================================
- *
- * ./configure --with-x --enable-xspice --enable-cider --enable-xspice --enable-pss --disable-debug --with-readline=yes --enable-openmb
- *
- * Make sure to have these libs to have xwin plot function working, as there will be no 
- * warning from the configure
- *  - libX11-devel (this must be there otherwise further checks are skipped and plot just won't work)
- *  - libXaw-devel
- *
- *
- * Other Fetures
- * =============
- *
- *  - include statement is given only once, with the first part
- *  - L,C,R device values are in addition converted as:
- *     - if the last character is 'R' it is removed (as 200R -> 200)
- *     - if the last character is 'M' then it is changed to Meg (as 2M -> 200Meg)
- *       a small 'm' is left as it is to represent mili
- *
- *
- * Attributes Reference List
- * =========================
- *
- *  - SPICE_DEVICE  = "A", "U", "R" ... overrides default device assignment policy
- *                    the new prefix is added at the front of the actual part number, 
- *                    so the uniqueness is preserved, i.e. IC1 -> XIC1, U1 -> XU1, etc..
- *
- *  - SPICE_VALUE   = ... replaces original value which is also used as a default name 
- *                    for the include file in sub-circuits unless SPICE_INCLUDE overrides it
- *          Append:   If the first character begins with + then the content is added to 
- *                    the existing value (useful for adding spice specifics)
- *
- *  - SPICE_MODEL   = ... pastes a model and when this value is set, auto include will be ignored
- *                    unless SPICE_INCLUDE is given. It can be used to describe even circuits.
- *                    Use \ for a new line. Note that a model can describe multiple package
- *                    variant that are distinguished by the technology suffix.
- *
- *  - SP_<param> = <value>  The Spice Parameter: SP_<param> when non-zero is placed as <param>=<value>
- *                    a macro inside the SPICE_MODEL block. I.e.: SPICE_MODEL = "(gain)", and
- *                    having defined SP_GAIN=1, will result as "(gain=1)". Any number of SP_..
- *                    can be used.
- *
- *  - SPICE_PORTS   = Defines a port mapping order, as "2 3 1" would only shuffle it, or 
- *                    "A C" to map A to N+ and C to N- of the spice junction diode.
- *                    Also if a component has 6 pins one may specify to use only "4 5 6" ignoring the rest.
- *                    Xspice support vectors where nodes are embraced in brackets [ ]. Use single space
- *                    as "[ A C ] D" as a delimiter between bracket symbols and the rest
- *
- *  - SPICE_INCLUDE = ... sets a file to be included with the given part regardless of device type
- *                    to include spice models or sub-circuits.
- *                    It also replaces a default value which would be used at X devices.
- *
- *  - SPICE_REM     = ... adds a comment before the component and when used with spice-port 
- *                    in sub-circuit description it adds a separate line for a pin description
- *
- *  - SPICE         = ... ads unique custom string below the part, which string won't repeat
- *                    if it is the same among many parts
- *
- *  - SPICE_IGNORE    when present the part is ignored, same as SPICE_VALUE="Unused" or "Open"
- *
- *
+"<p>"
+"Transistors, mosfets, integrated circuits are treated in natural "
+"spice way: all primitive elements may be given extra model description, and "
+"integrated circuits are included as sub-circuits. So one component (eagle "
+"schematics) can be instantiated into the other circuit in a hierarchical way. "
+"<p>"
+"<b>ChangeLog</b><p>"
+"\n\n"
+"Version 1.3, 25th March 2017<ul>"
+"<li>Control of parameters from top-level circuit"
+"<li>Output file specs with sheet filter"
+"<li>Documentation clean-up"
+"</ul>"
+"Version 1.2, 2016<ul>"
+"<li>Added support for code models, mixed signal digital simulation"
+"</ul>"
+"Version 1.0, 9. March 2014<ul>"
+"<li>Extended to sub-circuits, inclusion of custom includes, libs and models"
+"<li>Eagle attribute directives to specify titles, author, ..."
+"</ul>"
+"Version 1.0, 22. August, 2012<ul>"
+"<li>First release for top-level circuit used with ngspice-24"
+"</ul>"
+
+"<hr>"
+
+"<h2>Top Level Design or a Sub-Circuit Model</h2>"
+
+"A schematics may represent a top-level design exported as .cir, or a sub-circuit "
+"model exported as .mod if there is at least one SPICE-PORT instance present from "
+"the ngspice.lbr.<p>"
+
+"Top-level design may be run directly while sub-circuit should be instantiated in "
+"another circuit, manually in a spice file, or as a component in another eagle "
+"schematics hierarchically.<p>"
+
+"When a top-level schematics is detected Auto Generated Sources, are enabled, "
+"which are otherwise disabled.</ul><p>"
+
+"The first line in the spice netlist represents the title, which is "
+"exported out of the following global attributes:<ul>"
+"<li>TITLE, should represent the full description schematic title, and can be placed as >TITLE on your sch<br>"
+"<li>DOCNUM, optional parameter and is printed out in ( ... ) after the TITLE,<br>"
+"<li>AUTHOR, the main (or the first) author of the schematics<br>"
+"<li>CONFIRMED, the responsible person in charge to confirm the schematics (co-author)</ul><p>"
+
+"<h2>Net Labeling</h2>"
+
+"<ul>"
+"<li>Net names N$<....> numbered by Eagle are converted as primitive numbers without N$ prefix"
+"<li>The net name GND, is converted to 0<br>"
+"<li>Other exception to these rules are nets defined as +5V, -5V, +12V "
+    "which are converted to +5V -> dcp5v, -5V -> dcn5v, dcp12v -> dcn12v when "
+    "automatically generated DC supplies are enabled.<br>"
+"<li>Other nets are left as on original schematics. You may use any string to "
+    "mark a net name, as sum, bus, vin, vout, adout, instead of using numbers."
+"</ul>"
+
+"<h2>Unit conversion</h2>"
+
+"Units of the L, C, R devices' values are in addition converted as follows:<ul>"
+"<li>if the last character is 'R' it is removed (as 200R -> 200)<br>"
+"<li>if the last character is 'M' then it is changed to Meg (as 2M -> 200Meg)<br>"
+"<li>a small 'm' is left as it is to represent mili</ul>"
+ 
+"<h2>Auto-Generated Sources</h2>"
+
+"When schematics is a top-level design (without any spice port placed), "
+"then the following rules apply:<ul>"
+
+"<li>Net names defined as +5V, -5V, +12V, are renamed "
+     "as +5V -> dcp5v, -5V -> dcn5v, +12V -> dcp12v<br>"
+"<li>and DC voltage sources are added to the nets automatically."
+"</ul>"
+
+"<h2>Primitive (Built-in) Elements</h2>"
+
+"<ul><li>Primitive elements are all spice basic elements and sources. "
+    "If name of your part clashes with the spice primitive use SPICE_DEVICE to override it.</ul>"
+
+"<h2>Code Models</h2>"
+
+"<ul><li>Used with the default assignment A<...>, or when attribute spice_cm = ... is given "
+        "then the prefix A<...> is used."
+"<li>In addition code model definition typically needs a more specific part declaration "
+    "that may be added with the spice_model = ... attribute.</ul>"
+ 
+"<h2>Sub-Circuits</h2><ul>"
+"<li>Any non-primitive element is treated as a sub-circuit when it is named as X<...> "
+    "and it generates an .include statement to include that sub-circuit"
+"<li>SPICE_DEVICE=X can be used to set a device a sub-circuit. "
+    "In spice code it will appear as XU1 ... if on eagle schematics its name is U1<br>"
+"<li>Auto appended prefixes: IC* -> XIC*  example: IC1 will convert as XIC1<br>"
+"<li>If additional Attribute is given SPICE_INCLUDE = ... then it overrides the above default<br>"
+"<li>include statement is given only once, with the first part<br>"
+"<li>Pin numbers define the net order in X<...> net@pin1 net@pin2 <value></ul>"
+
+"<h2>Ignoring Parts</h2><ul>"
+
+"<li>Part can be ignored by placing a SPICE_IGNORE attribute to the part or by setting "
+    "part's value to: <b>open</b> or <b>unused</b><br>In all these cases parts "
+    "is ignored. Note that SPICE_VALUE overrides the default value of the part.<br>"
+
+"<li>When generating sub-circuit use SPICE_IGNORE attribute as open/unused is not used in the detection.</ul>"
+ 
+"<h2>Schematics as a Sub-circuit</h2><ul>"
+
+"<li>Placing a spice-port from ngspice.lbr with value will create the circuit as a sub-circuit, where "
+    "port name defines the pin number and its value a net. Make sure that net matches actual "
+    "net name. Port does not need to be physically connected to the net as the script searches for its value only. "
+    "But to make a schematics clear, we advise you to draw a net to it.<br>"
+"<li>Pin names must be correctly ordered PIN1, PIN2, PIN3, ... etc., however if one is missing "
+    "such as PIN1, PIN3, PIN4, ngspice would skip that and produce the interface for the three pins only. "
+    "This allows that only one sheet of the circuit is exported for evaluation.<br>"
+"<li>Add SPICE_REM attribute to the spice-port to describe the pin, information is added to the sub-circuit header.<br>"
+"<li>Any part value which is of form <b>{param}=default</b> will be added to the sub-circuit parameter list as:<br>"
+    ".subckt ... param=default, and within the circuit value as {param} will be passed.<br> "
+    "More than just one part may use {param} but only one with the default value. For example:<ul>"
+    "<li>R1 has value {rin}=1k and R2 has value {2*rin}</ul>"
+"</ul>"
+    
+"<h2>Additional Spice Declarations</h2><ul>"
+
+"<li>Control directives, which are placed at the end of the file generated are "
+    "to be placed on the layer with name <b>spice</b> or <b>ngspice</b> or <b>ngspice-control</b>.<br>"
+"<li>Control directives, which are placed at the beginning of the file, are to "
+    "be placed on the layer with name <b>ngspice-init</b></ul>"
+ 
+"<h2>Attributes Reference List</h2><ul>"
+
+"<li><b>SPICE_DEVICE  = A, U, R, etc.</b> overrides default device naming policy in such a way that "
+"the new prefix is added at the front of the actual part number, "
+"so the uniqueness overall circuit is 100% preserved, i.e. IC1 -> XIC1, U1 -> XU1, etc..<br>"
+
+"<li><b>SPICE_VALUE   = ... </b> replaces original value. This new value is also used in "
+"auto-includes for sub-circuits. SPICE_INCLUDE however overrides all.<br>"
+"If the first character begins with + then the content of the SPICE_VALUE is appended to"
+"the existing value, which is useful for adding spice specifics parameters.<br>"
+
+"<li><b>SPICE_MODEL   = ... </b> provides a model. When this attribute is set, auto include will be disabled "
+"unless SPICE_INCLUDE is given. This attribute can be used even to describe a complete sub-circuits. "
+"Use \ for a new line. Note that in Eagle a model can describe multiple package "
+"variant that are distinguished by the technology suffix.<br>"
+
+"<li><b>SP_<param> = <value></b>  The Spice Parameter: SP_<param> when non-zero is placed as <param>=<value> "
+"a macro inside the SPICE_MODEL block. I.e.: SPICE_MODEL = <b>(gain)</b>, and "
+"having defined SP_GAIN=1, will result as <b>(gain=1)</b>. Any number of SP_.. "
+"can be used.<br>"
+
+"<li><b>SPICE_PORTS   = </b>Defines a port mapping order, as <b>2 3 1</b> would only shuffle it, or "
+"<b>A C</b> to map A to N+ and C to N- of the spice junction diode. "
+"Also if a component has 6 pins one may specify to use only <b>4 5 6</b> ignoring the rest. "
+"Xspice support vectors where nodes are embraced in brackets [ ]. Use single space "
+"as <b>[ A C ] D</b> as a delimiter between bracket symbols and the rest<br>"
+
+"<li><b>SPICE_INCLUDE = ... </b> sets a file to be included with the given part regardless of device type "
+"to include spice models or sub-circuits. "
+"It also replaces a default value which would be used at X devices.<br>"
+
+"<li><b>SPICE_REM     = ... </b> adds a comment before the component and when used with spice-port "
+"in sub-circuit description it adds a separate line for a pin description<br>"
+
+"<li><b>SPICE         = ... </b> ads unique custom string below the part, which string won't repeat "
+"if it is the same among many parts<br> "
+
+"<li><b>SPICE_IGNORE</b>    when present the part is ignored, same as SPICE_VALUE=<b>Unused</b> or <b>Open</b>"
+"</ul>"
+"<hr>"
+
+ 
+/*
  * Things in my mind for the Future
  * ================================
  * 
@@ -223,10 +199,50 @@
  *    models.
  *         
  *  - Single net elimination from spice list, maybe not needed as ngspice would yield warning
- **/
+ *
+ *
+ * ngSpice Installation under Cygwin
+ * =================================
+ *
+ * ./configure --with-x --enable-xspice --enable-cider --enable-xspice --enable-pss --disable-debug --with-readline=yes --enable-openmb
+ *
+ * Make sure to have these libs to have xwin plot function working, as there will be no 
+ * warning from the configure
+ *  - libX11-devel (this must be there otherwise further checks are skipped and plot just won't work)
+ *  - libXaw-devel 
+ */
  
 string usedString[];       // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
 int usedCount = 0;
+
+
+/**
+ * Is sheet selected for export?
+ *
+ * Sheet 0 means all.
+ */
+int is_sheetselected(int number)
+{
+    if (argc >= 3) {
+        if (strtol(argv[2]) == number)
+            return number;
+        return 0;
+    }
+    return 1000;
+}
+
+
+/**
+ * Is output file given?
+ */
+string argv_outfile()
+{
+    if (argc >= 2) 
+        return argv[1];
+    
+    return "";
+}
+
  
 /** 
  * Convert net to a lower case string
@@ -590,30 +606,33 @@ void describePart(UL_PART part)
  * Generate DC sources from net labels
  *
  * This feature is only enabled in top-level circuit mode, and not in
- * subcircuit mode, in whic it is treated as usual net.
+ * subcircuit mode, in which it is treated as usual net.
  */
 void generateDCs()
 {
     string net;
 
-    schematic(SCH) SCH.sheets(SH) SH.nets(N) N.segments(SEG)
-    {
-        net = N.name;
-        if (net[0] == '+' || net[0] == '-')
-        {
-			int index;
-			string dc_source;
-			
-			net = net2str(net);
-			sprintf(dc_source, "V%s %s 0 DC %s", net, net, N.name);
-			
-			if ( lookup( usedString, dc_source, index ) == "" )
-			{            
-				printf("%s\n", dc_source);
-				usedString[ usedCount++ ] = dc_source;				
-			}
-            
-        }                    
+    schematic(SCH) SCH.sheets(sht) {
+        if ( !is_sheetselected(sht.number) ) continue;
+        
+        sht.nets(N) N.segments(SEG) {
+            net = N.name;
+            if (net[0] == '+' || net[0] == '-')
+            {
+                int index;
+                string dc_source;
+                
+                net = net2str(net);
+                sprintf(dc_source, "V%s %s 0 DC %s", net, net, N.name);
+                
+                if ( lookup( usedString, dc_source, index ) == "" )
+                {            
+                    printf("%s\n", dc_source);
+                    usedString[ usedCount++ ] = dc_source;				
+                }
+                
+            }
+        }
     }
 }
 
@@ -647,63 +666,67 @@ string generateSubcircuit()
     string desc[];
     string params;
 
-    schematic(sch)
-    {
-        sch.sheets(sht) sht.parts(part)
-        {
-            /*
-             * Extract in order PIN1, PIN2, ... and take out Value as PIN description, 
-             * and the net it is connected to.
-             */
-             
-            if ( part.device.name == "SPICE-PORT" && getAttribute(part, "SPICE_IGNORE") == "" )
-            {
-                pinname[pins] = part.name;
-                pin[pins]   = strtol( strsub(part.name,3) );
-                if ( pin[pins] == 0 || strsub(part.name,0,3) != "PIN" )
-                {
-                    dlgMessageBox(":FIXME: Cannot correctly sort pin " + part.name );
-                    exit( EXIT_FAILURE );
-                }
-                value[pins] = part.value;
-                desc[pins]  = getAttribute(part, "SPICE_REM");
-                pins++;
-                
+    schematic(sch) {
+        sch.sheets(sht) {
+            if ( !is_sheetselected(sht.number) ) continue;
+            
+            sht.parts(part) {
                 /*
-                 * Check if a net with that name exists, otherwise report error
+                 * Extract in order PIN1, PIN2, ... and take out Value as PIN description, 
+                 * and the net it is connected to.
                  */
                  
-                int found = 0;
-                sch.sheets(SH) SH.nets(N)
+                if ( part.device.name == "SPICE-PORT" && getAttribute(part, "SPICE_IGNORE") == "" )
                 {
-                    if ( N.name == strupr( part.value ) )
+                    pinname[pins] = part.name;
+                    pin[pins]   = strtol( strsub(part.name,3) );
+                    if ( pin[pins] == 0 || strsub(part.name,0,3) != "PIN" )
                     {
-                        found = 1;
-                        break;
+                        dlgMessageBox(":FIXME: Cannot correctly sort pin " + part.name );
+                        exit( EXIT_FAILURE );
                     }
+                    value[pins] = part.value;
+                    desc[pins]  = getAttribute(part, "SPICE_REM");
+                    pins++;
+                    
+                    /*
+                     * Check if a net with that name exists, otherwise report error
+                     */
+
+                    int found = 0;
+                    sch.sheets(sht) {
+                        if ( !is_sheetselected(sht.number) ) continue;
+                        sht.nets(N) {
+                            if ( N.name == strupr( part.value ) )
+                            {
+                                found = 1;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (found == 0)
+                    {
+                        dlgMessageBox(":Sub-circuit port " + part.name + " is assigned to a net " + part.value + 
+                            " which does not exist in a circuit.");
+                        exit( EXIT_FAILURE );
+                    }                
                 }
                 
-                if (found == 0)
-                {
-                    dlgMessageBox(":Sub-circuit port " + part.name + " is assigned to a net " + part.value + 
-                        " which does not exist in a circuit.");
-                    exit( EXIT_FAILURE );
-                }                
-            }
-            
-            /*
-             * Extract all parameters of format {...}
-             */
-            string param = getAttribute(part, "SPICE_VALUE");
-            if (param == "")
-                param = part.value;
+                /*
+                 * Extract all parameters of format {...}
+                 */
+                string param = getAttribute(part, "SPICE_VALUE");
+                if (param == "")
+                    param = part.value;
+                    
+                int paramDefaultPos = strstr( param, "}=" );
                 
-            int paramDefaultPos = strstr( param, "}=" );
-            
-            if ( param[0] == '{' && paramDefaultPos > 1 )
-            {
-                // convert "{rval}=1k" to "rval=1k"
-                params += " " + strsub( param, 1, paramDefaultPos-1 ) + "=" + strsub( param, paramDefaultPos+2);
+                if ( param[0] == '{' && paramDefaultPos > 1 )
+                {
+                    // convert "{rval}=1k" to "rval=1k"
+                    params += " " + strsub( param, 1, paramDefaultPos-1 ) + "=" + strsub( param, paramDefaultPos+2);
+                }
             }
         }
         
@@ -755,6 +778,7 @@ string getTitleAuthors()
     string docnum;
     string author;
     string confirmed;
+    string sheetnum;
     
     schematic(sch) sch.attributes(attr)
     {
@@ -765,16 +789,16 @@ string getTitleAuthors()
             docnum = " (" + attr.value + ")";
         
         if (attr.name == "AUTHOR" && strlen(attr.value)>2)
-            author = attr.value;
+            author = " by " + attr.value;
             
         if (attr.name == "CONFIRMED" && strlen(attr.value)>2)
             confirmed = ", " + attr.value;
     }
     
-    if (title != "")
-        return title + docnum + " by " + author + confirmed + "\n";
-        
-    return "";
+    if (argc >= 3)
+        sheetnum = " Sheet " + argv[2] + " ";
+    
+    return title + sheetnum + docnum + author + confirmed + "\n";
 }
 
 
@@ -784,16 +808,20 @@ string getTitleAuthors()
 schematic(sch)
 {
     string subckt_header = generateSubcircuit();
-    string outfilename   = filesetext(sch.name, subckt_header == "" ? ".cir" : ".mod");
+    string outfilename   = argv_outfile();
+    
+    if (outfilename == "")
+        outfilename = filesetext(sch.name, subckt_header == "" ? ".cir" : ".mod");
     
     output( outfilename )
     {
         printf("%s%s\n", subckt_header == "" ? "" : "* ", getTitleAuthors() );
         printf("* The %s ngspice netlist was auto-generated on %s\n", getSubcircuitModelName(sch.name), t2string( time() ));
-        printf("* with ngspice.ulp V1.1 for Eagle 6.5.0 - 7.7 by uros@isotel.eu\n*\n%s\n\n", subckt_header);        
+        printf("* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim\n*\n%s\n\n", subckt_header);
                 
         printf( "* List of Ignored and Modified Components:\n*\n");
         sch.sheets(sht) {
+            if ( !is_sheetselected(sht.number) ) continue;
             sht.parts(part) {
                 if ( getAttribute(part, "SPICE_IGNORE") != "" ) {
                     printf("* - %s: SPICE_IGNORE\n", part.name);
@@ -806,8 +834,9 @@ schematic(sch)
         }        
         printf("\n");
         
-        sch.sheets(sht)
-        {
+        sch.sheets(sht) {
+            if ( !is_sheetselected(sht.number) ) continue;
+
             /*
              * NgSpice Control Directives what comes to the end
              */
