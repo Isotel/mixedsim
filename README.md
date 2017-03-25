@@ -1,4 +1,4 @@
-# Hardware Design Tool - Mixed Signal Simulation with Verilog Project
+# Hardware Design Tool - Mixed Signal Simulation with Verilog
 
 Designing embedded applications typically involves analog and digital worlds, 
 from simple micro-controllers, more comprehensive micro-controllers featuring 
@@ -10,3 +10,11 @@ packages each having some benefits and drawbacks. Here we represent an open-sour
 free to use solution thanks to open-source projects which runs on all systems.
 
 More info about the project: http://www.isotel.eu/mixedsig/intro
+
+## Content
+
+- Eagle to Spice: Simulate existing (real) schematics instead of redrawing parts of it
+
+- Yosys Verilog synthesis library for ngspice, and ltspice
+
+- Examples
