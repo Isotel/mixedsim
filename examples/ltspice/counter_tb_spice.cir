@@ -1,0 +1,20 @@
+* LTspice example of the counter
+
+* load design and library
+.include ../../yosys/prim_cells_ltspice.mod
+.include ../counter/counter_spice.mod
+
+* input signals
+Vclk clk 0 PULSE(0 1 10ns 10ns 10ns 1us 2us 30)
+Vrst rst 0 PULSE(0 1 10ns 10ns 10ns 10us 1 1)
+Ven en 0 PULSE(0 1 10us 10ns 10ns 1 1)
+
+R1 out0 0 1k
+R2 out1 0 1k
+R3 out2 0 1k
+
+Xuut clk rst en out0 out1 out2 COUNTER
+
+.tran 10ns 30us
+
+.end
