@@ -1,7 +1,7 @@
 #usage "<h1>Simulate Real Eagle Schematics with Mixed Signal ngSpice</h1>"
         "Version 1.3, 25/03/2017, (c) 2012-2017 Uros Platise, http://www.isotel.eu/mixedsim\n"
         "<p><ul>"
-        "Run as: <b>run ngspice</b> [<i>outfile</i> [<i>sheet number</i>]]</ul><p>"
+        "Run as: <b>run ngspice</b> [<i>outfile</i> [<i>sheet number</i> [<i>subckt pin name</i>]]]</ul><p>"
 "The ngspice, http://ngspice.org, is a mixed signal simulator "
 "embedding spice3f5 (analog), xspice (mixed signal), tclspice (scripting), "
 "and allows inclusion of the Verilog-AMS models as well as simulation with the Verilog/VHDL via Yosys synthesis. "
@@ -13,9 +13,15 @@
 "Netlists are extracted as top or as sub-circuits on detection of at least one "
 "sub-circuit port element from the ngspice.lbr."
 "In this case script will generate a sub-circuit in a file with .mod extension. "
-"Otherwise schematics is extract as top-level circuit with .cir extension."
+"Otherwise schematics is extract as top-level circuit with .cir extension. "
 "One may specify a filename to be different with the first argument in a command line, and "
-"optionally it may select a sheet by its number to selectively export only part of the circuit."
+"optionally it may select a sheet by its number to selectively export only part of the circuit. "
+"Both arguments are given when exporting a part of the circuit to create a sub-circuit. "
+"In such cases we would like that this circuit has different ports in spice subckt creation "
+"than the whole schematics. This is defined by the 3rd argument, to override the default "
+"SPICE-PORT name PINx, to something else, let's say our sheet 5 has a analog filter and we "
+"would like to evalute separately, so we name SPICE-PORTs as A1, A2, A3, .. and enter "
+"for the last argument the prefix: A"
 
 "<p>"
 "Transistors, mosfets, integrated circuits are treated in natural "
@@ -214,6 +220,17 @@
  
 string usedString[];       // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
 int usedCount = 0;
+
+
+/**
+ * Select pins for subcircit by name
+ */
+string getport_pinname()
+{
+    if (argc >= 4)
+        return strupr(argv[3]);
+    return "PIN";
+}
 
 
 /**
@@ -676,11 +693,16 @@ string generateSubcircuit()
                  * and the net it is connected to.
                  */
                  
-                if ( part.device.name == "SPICE-PORT" && getAttribute(part, "SPICE_IGNORE") == "" )
+                if ( part.device.name == "SPICE-PORT" && getAttribute(part, "SPICE_IGNORE") == "")
                 {
-                    pinname[pins] = part.name;
-                    pin[pins]   = strtol( strsub(part.name,3) );
-                    if ( pin[pins] == 0 || strsub(part.name,0,3) != "PIN" )
+                    int len = strlen(getport_pinname());
+                    
+                    if ( strsub(part.name,0,len) != getport_pinname() )
+                        continue;
+                    
+                    pinname[pins]  = part.name;
+                    pin[pins]      = strtol( strsub(part.name,len) );
+                    if ( pin[pins] == 0 )
                     {
                         dlgMessageBox(":FIXME: Cannot correctly sort pin " + part.name );
                         exit( EXIT_FAILURE );
