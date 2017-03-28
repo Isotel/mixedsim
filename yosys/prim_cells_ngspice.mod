@@ -1,5 +1,13 @@
 * ngspice digital cells, Uros Platise, http://http://www.clifford.at/yosys
 
+.global d_low d_high
+
+.model digital_pulldown d_pulldown
+.model digital_pullup   d_pullup
+
+Ad_pulldown d_low digital_pulldown
+Ad_pullup   d_high digital_pullup
+
 .SUBCKT BUF A Y
 .model buffer1 d_buffer
 Abuf A Y buffer1

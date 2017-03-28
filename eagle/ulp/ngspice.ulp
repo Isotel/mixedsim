@@ -8,8 +8,8 @@
 "The xspice adds over 40+ mixed signal analog/digital components to the basic spice. By using "
 "CodeModels that can be expanded to your custom models written in C. "
 "<p>"
-"Purpose of this ngspice script is use it in natural way with real circuits, instead of copying and redrawing "
-"for simulation purposes only."
+"Purpose of this ngspice script is to use it in a natural way with real circuits to avoid copying and redrawing "
+"parts of it for simulation purposes only."
 "Netlists are extracted as top or as sub-circuits on detection of at least one "
 "sub-circuit port element from the ngspice.lbr."
 "In this case script will generate a sub-circuit in a file with .mod extension. "
@@ -210,7 +210,7 @@
  * ngSpice Installation under Cygwin
  * =================================
  *
- * ./configure --with-x --enable-xspice --enable-cider --enable-xspice --enable-pss --disable-debug --with-readline=yes --enable-openmb
+ * ./configure --with-x --enable-xspice --enable-cider --enable-pss --disable-debug --with-readline=yes --enable-openmb
  *
  * Make sure to have these libs to have xwin plot function working, as there will be no 
  * warning from the configure
