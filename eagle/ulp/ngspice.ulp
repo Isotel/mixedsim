@@ -368,6 +368,13 @@ string buildModel(UL_PART part)
             int index = 0;
             while( (index = strstr(strlwr(model), param, index)) != -1 )
             {
+                if (index > 0) {
+                    if (model[index-1] != ' ' && model[index-1] != '(') {
+                        index += strlen(param);
+                        continue;
+                    }
+                }
+                
                 if (attr.value != "")
                 {
                     index += strlen(param);
@@ -409,9 +416,13 @@ void describePart(UL_PART part)
         return;
     if ( !part.device.package )
         return;
+    if ( strlen(part.value) == 0 ) {
+        dlgMessageBox("Part " + part.name + " has no value given and is ignored.\n\nHowever rather set it's value to Open or use SPICE_IGNORE attribute to ignore it.\n");
+        return;
+    }
     
     /*
-     * Add a correct spice prefix t a device name or auto-convert
+     * Add a correct spice prefix to a device name or auto-convert
      *  IC -> X
      */
     if ( (name = getAttribute(part, "SPICE_DEVICE")) == "" )
@@ -787,6 +798,82 @@ int findSpiceLayer(string name, string alt_name, string alt_name2)
 }
 
 
+
+/**
+ * Include external module via module instance and SPICE-XPORT
+ *
+ * - add .include for once only
+ * - scan for spice-xport and bind nets to pin numbers
+ * - add params at the end
+ */
+void instModules()
+{
+    schematic(sch) sch.sheets(sht) sht.moduleinsts(mi)
+    {                
+        printf("* Processing module %s from sheet %d: \n", mi.name, mi.sheet);
+        int ports = 0;
+                
+        int spiceLayer = findSpiceLayer("ngspice", "ngspice-control", "spice");
+        if (spiceLayer > -1)
+        {
+            mi.module.sheets(msht) msht.texts(txts) {
+                if (txts.layer == spiceLayer && strstr(strlwr(txts.value), ".include") >= 0) {
+                    int index;
+                    if ( lookup( usedString, strlwr(txts.value), index ) == "" )
+                    {
+                        printf("%s\n", txts.value);
+                        usedString[ usedCount++ ] = strlwr(txts.value);
+                    }
+                }
+            }
+        }
+        
+        printf("X%s ", strlwr(mi.name) );
+        
+        mi.module.parts(part) {
+            if ( part.device.name == "SPICE-XPORT" ) {
+            
+                if (strlen(part.value)==0) {
+                    dlgMessageBox(":Spice-xport " + part.name + " of module " + mi.module.name + " must have value defined.\n\nAssign it a net name.");
+                    exit(1);                    
+                }
+            
+                int found = 0;
+                ports++;
+            
+                /* find net that is connected to this port */
+                //printf("%s ", part.value);
+                sch.sheets(SH) SH.nets(N) {
+                    N.segments(SEG) {
+                        SEG.portrefs(P) {
+                            if (P.moduleinst.name == mi.name && strupr(part.value) == P.port.name) {
+                                //printf("\tNet %s connected to: %s, %s\n", N.name, P.moduleinst.name, P.port.name);
+                                printf("%s ", net2str(N.name) );
+                                found = 1;                                
+                            }
+                        }
+                    }
+                }
+                
+                if (found == 0)
+                    printf("null ");
+            }
+            else {
+                dlgMessageBox(":Component " + part.name + " of module " + mi.module.name + " is not supported.\n\nThis version supports spice-xport from ngspice.lbr only.");
+                exit(1);                    
+            }
+        }
+        
+        printf("%s\n\n", mi.module.name);
+        
+        if (ports == 0) {
+            dlgMessageBox(":Module " + mi.module.name + " has none of the spice-xports from ngspice.lbr placed.");
+            exit(1);
+        }
+    }
+}
+
+
 /**
  * Returns schematics basic information, title and authors
  * to be printed as the first line in the spice output file
@@ -886,7 +973,17 @@ schematic(sch)
             }
 
             printf("\n");
-
+            
+            /*
+             * Process Instantiation of External Modules
+             */
+             
+            instModules();
+            
+            /*
+             * Generate Sources
+             */
+             
             if ( subckt_header == "" )
             {
                 printf("* Auto Generated Sources\n");
