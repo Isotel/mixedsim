@@ -76,7 +76,7 @@
 <library>
 <description>&lt;b&gt;Mixed Signal ngSpice Simulator Library&lt;/b&gt;
 &lt;hr&gt;
-The library contains mixed signal components to be used with the ngspice.ulp according to the ngspice User Manual version 26, &lt;a href="http://ngspice.org"&gt;http://ngspice.org&lt;/a&gt;. Library is provided by &lt;a href="http://isotel.eu/mixedsim"&gt;Isotel GmbH&lt;/a&gt;, download most recent version from &lt;a href="http://github.com/isotel/mixedsim"&gt;GitHub&lt;/a&gt;.
+The library contains mixed signal components to be used with the ngspice.ulp according to the ngspice User Manual version 26, &lt;a href="http://ngspice.org"&gt;http://ngspice.org&lt;/a&gt;. Library is provided by Uros Platise from &lt;a href="http://isotel.eu/mixedsim"&gt;Isotel GmbH&lt;/a&gt;, download most recent version from &lt;a href="http://github.com/isotel/mixedsim"&gt;GitHub&lt;/a&gt;.
 &lt;p&gt;
 Library includes spice documentation extracted from the ngspice documentation version 26 which is a Copyright 1996 The Regents of the University of California.
 &lt;p&gt;
@@ -85,9 +85,13 @@ Library includes ngspice primitives. Since ngspice is a mixed signal simulator i
 &lt;li&gt;Digital signals which may be in one of the 12 ngspice states, denoted by a prefix &lt;b&gt;#&lt;/b&gt; character in symbol pin names, and
 &lt;li&gt;Real values, prefixed with the &lt;b&gt;~&lt;/b&gt; character in symbol pin names.
 &lt;/ul&gt;
-To bridge signal from one to another special hybrid components are to be used, such as ADC_BUF, DAC_BUF, etc.
+To bridge signal from one to another special hybrid components are to be used, such as ADC_BUF, DAC_BUF, and others.
 &lt;p&gt;
-Another eagle specfic component is called spice-port is provided to form sub-circuits either of a whole schematics or just selected sheets of the schematics. See ngspice.ulp for more information.
+Another eagle specfic components are called:&lt;ul&gt;
+&lt;li&gt;spice-port, used to form sub-circuits either of a whole schematics or just selected sheets of the schematics, and
+&lt;li&gt;spice-xport, used to source an external circuitry via Eagle module's, without the need of creating new components.
+&lt;/ul&gt;
+ See ngspice.ulp for more information and examples provided by the &lt;a href="http://isotel.eu/mixedsim"&gt;Isotel Mixed Simulation Project&lt;/a&gt;.
 &lt;/p&gt;</description>
 <packages>
 <package name="VSOURCE">
