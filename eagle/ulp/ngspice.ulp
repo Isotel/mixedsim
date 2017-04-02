@@ -396,12 +396,8 @@ string buildModel(UL_PART part)
 /** 
  * Print-out part description 
  *
- * Eliminate: 
- *  - U$1, ... whenever there is $ in the name
- *  - GND, P+, P-
- *
- * Add:
- *  - include for external parts (sub-circuits) when name starts with X
+ * TODO: filter out unplaced pins via part.UL_INSTANCE so we can implement
+ *       dynamic number of pins for RAM, digital sources, and others.
  */
 void describePart(UL_PART part)
 {
@@ -799,13 +795,14 @@ int findSpiceLayer(string name, string alt_name, string alt_name2)
 }
 
 
-
 /**
  * Include external module via module instance and SPICE-XPORT
  *
- * - add .include for once only
  * - scan for spice-xport and bind nets to pin numbers
  * - add params at the end
+ *
+ * TODO:
+ *  - add bus to represent a vector
  */
 void instModules()
 {
@@ -813,14 +810,18 @@ void instModules()
     {                
         printf("* Processing module %s from sheet %d: \n", mi.name, mi.sheet);
         int ports = 0;
+        char model = 'X';
                 
         int spiceLayer = findSpiceLayer("ngspice", "ngspice-control", "spice");
         if (spiceLayer > -1)
         {
             mi.module.sheets(msht) msht.texts(txts) {
-                if (txts.layer == spiceLayer && strstr(strlwr(txts.value), ".include") >= 0) {
+                if (txts.layer == spiceLayer) {
                     int index;
-                    if ( lookup( usedString, strlwr(txts.value), index ) == "" )
+                    if (strstr(strlwr(txts.value), ".model") >= 0)
+                        model = 'A';
+                        
+                    if (lookup(usedString, strlwr(txts.value), index) == "")
                     {
                         printf("%s\n", txts.value);
                         usedString[ usedCount++ ] = strlwr(txts.value);
@@ -828,8 +829,8 @@ void instModules()
                 }
             }
         }
-        
-        printf("X%s ", strlwr(mi.name) );
+                
+        printf("%c%s ", model, strlwr(mi.name) );
         
         mi.module.parts(part) {
             if ( part.device.name == "SPICE-XPORT" ) {
