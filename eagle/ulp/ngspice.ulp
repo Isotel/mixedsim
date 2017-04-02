@@ -366,7 +366,9 @@ string buildModel(UL_PART part)
         {
             string param = strlwr( strsub(attr.name, 3) );
             
-            int index = 0;
+            // start parsing at the first ( search from the end since we only expect [] within model( ... )
+            int index = strrchr(model, '(');
+            
             while( (index = strstr(strlwr(model), param, index)) != -1 )
             {
                 if (index > 0) {

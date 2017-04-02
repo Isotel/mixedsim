@@ -1724,7 +1724,7 @@ the output will begin to smooth out at ±0.9 volts, which occurs when the input 
 <attribute name="SP_FRACTION" value="false" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
-<attribute name="SP_LIMITER_RANGE" value="1e-6" constant="no"/>
+<attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
 <attribute name="SP_OUT_LOWER_LIMIT" value="0" constant="no"/>
 <attribute name="SP_OUT_UPPER_LIMIT" value="1" constant="no"/>
 </technology>
@@ -2039,7 +2039,7 @@ the model is no longer slewing (output = input), dout/din will equal 1.0.</descr
 <technology name="">
 <attribute name="SPICE_MODEL" value=".model slew slew(rise_slope fall_slope range)" constant="no"/>
 <attribute name="SP_FALL_SLOPE" value="1e9" constant="no"/>
-<attribute name="SP_RANGE" value="0.1" constant="no"/>
+<attribute name="SP_RANGE" value="" constant="no"/>
 <attribute name="SP_RISE_SLOPE" value="1e9" constant="no"/>
 </technology>
 </technologies>
