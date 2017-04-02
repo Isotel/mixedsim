@@ -69,6 +69,7 @@
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="99" name="SpiceOrder" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="110" name="spice" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="250" name="Descript" color="3" fill="1" visible="no" active="no"/>
 <layer number="251" name="SMDround" color="12" fill="11" visible="no" active="no"/>
@@ -76,7 +77,8 @@
 <library>
 <description>&lt;b&gt;Mixed Signal ngSpice Simulator Library&lt;/b&gt;
 &lt;hr&gt;
-The library contains mixed signal components to be used with the ngspice.ulp according to the ngspice User Manual version 26, &lt;a href="http://ngspice.org"&gt;http://ngspice.org&lt;/a&gt;. Library is provided by Uros Platise from &lt;a href="http://isotel.eu/mixedsim"&gt;Isotel GmbH&lt;/a&gt;, download most recent version from &lt;a href="http://github.com/isotel/mixedsim"&gt;GitHub&lt;/a&gt;.
+The library contains mixed signal, analog, hybrid, and digital components introduced by XSpice compiled with the &lt;a href="http://ngspice.org"&gt;ngSpice&lt;/a&gt; as described in the ngspice User Manual version 26, &lt;a href="http://ngspice.org"&gt;http://ngspice.org&lt;/a&gt;.
+Library is to be used with the ngspice.ulp provided by Uros Platise from &lt;a href="http://isotel.eu/mixedsim"&gt;Isotel GmbH&lt;/a&gt;. Make sure you're up-to-date by downloading the most recent version from &lt;a href="http://github.com/isotel/mixedsim"&gt;GitHub&lt;/a&gt;.
 &lt;p&gt;
 Library includes spice documentation extracted from the ngspice documentation version 26 which is a Copyright 1996 The Regents of the University of California.
 &lt;p&gt;
@@ -286,25 +288,34 @@ Another eagle specfic components are called:&lt;ul&gt;
 <pin name="ENABLE" x="2.54" y="-7.62" visible="pad" length="middle" direction="in" rot="R90"/>
 </symbol>
 <symbol name="Z">
-<wire x1="-7.62" y1="-5.08" x2="7.62" y2="-5.08" width="0.4064" layer="94"/>
-<wire x1="7.62" y1="-5.08" x2="7.62" y2="7.62" width="0.4064" layer="94"/>
-<wire x1="7.62" y1="7.62" x2="-7.62" y2="7.62" width="0.4064" layer="94"/>
-<wire x1="-7.62" y1="7.62" x2="-7.62" y2="-5.08" width="0.4064" layer="94"/>
-<text x="2.54" y="-7.747" size="1.778" layer="95">&gt;NAME</text>
-<text x="-7.112" y="8.382" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="OUT~" x="12.7" y="5.08" length="middle" direction="out" rot="R180"/>
-<pin name="#CK" x="0" y="-10.16" length="middle" direction="in" function="clk" rot="R90"/>
-<pin name="~IN" x="-12.7" y="5.08" length="middle" direction="in"/>
+<wire x1="-5.08" y1="0" x2="5.08" y2="0" width="0.4064" layer="94"/>
+<wire x1="5.08" y1="0" x2="5.08" y2="7.62" width="0.4064" layer="94"/>
+<wire x1="5.08" y1="7.62" x2="-5.08" y2="7.62" width="0.4064" layer="94"/>
+<wire x1="-5.08" y1="7.62" x2="-5.08" y2="5.08" width="0.4064" layer="94"/>
+<text x="2.54" y="-2.667" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.334" y="8.382" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="OUT~" x="10.16" y="5.08" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="#CK" x="0" y="-5.08" visible="pad" length="middle" direction="in" function="clk" rot="R90"/>
+<pin name="~IN" x="-10.16" y="5.08" visible="pad" length="middle" direction="in"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.4064" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="-5.842" y2="5.842" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="-5.842" y2="4.318" width="0.254" layer="94"/>
+<text x="-4.572" y="4.318" size="1.6764" layer="94">~    z    ~</text>
+<text x="0.508" y="5.334" size="1.016" layer="94">-1</text>
 </symbol>
 <symbol name="RGAIN">
-<pin name="ROUT" x="12.7" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
-<pin name="RIN" x="-7.62" y="0" visible="pad" length="middle" direction="in"/>
-<text x="2.54" y="-5.08" size="1.778" layer="95">&gt;NAME</text>
-<text x="-2.54" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
-<wire x1="-2.54" y1="5.08" x2="-2.54" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="-5.08" x2="7.62" y2="0" width="0.254" layer="94"/>
-<wire x1="7.62" y1="0" x2="-2.54" y2="5.08" width="0.254" layer="94"/>
-<text x="-1.778" y="-0.762" size="1.778" layer="94">~      ~</text>
+<pin name="ROUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="RIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<text x="-4.318" y="-0.762" size="1.778" layer="94">~        ~</text>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
 </symbol>
 <symbol name="R2V">
 <pin name="VOUT" x="12.7" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
@@ -548,6 +559,213 @@ Another eagle specfic components are called:&lt;ul&gt;
 <text x="-10.16" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
 <pin name="FOUT#" x="15.24" y="0" length="middle" direction="out" rot="R180"/>
 <pin name="#FIN" x="-15.24" y="0" length="middle" direction="in"/>
+</symbol>
+<symbol name="GAIN">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+</symbol>
+<symbol name="SUM">
+<pin name="AOUT" x="7.62" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN1" x="-7.62" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-2.54" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-4.572" size="1.778" layer="96">&gt;VALUE</text>
+<circle x="0" y="0" radius="2.54" width="0.254" layer="94"/>
+<pin name="AIN2" x="0" y="-7.62" visible="pad" length="middle" direction="in" rot="R90"/>
+<wire x1="0" y1="1.016" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-1.016" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.016" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="1.016" y2="0" width="0.254" layer="94"/>
+<wire x1="0.762" y1="-3.302" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-0.762" y2="-3.302" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="-0.762" width="0.254" layer="94"/>
+</symbol>
+<symbol name="MUL">
+<pin name="AOUT" x="7.62" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN1" x="-7.62" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-2.54" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-4.572" size="1.778" layer="96">&gt;VALUE</text>
+<circle x="0" y="0" radius="2.54" width="0.254" layer="94"/>
+<pin name="AIN2" x="0" y="-7.62" visible="pad" length="middle" direction="in" rot="R90"/>
+<circle x="0" y="0" radius="0.254" width="0.4064" layer="94"/>
+<wire x1="0" y1="-2.54" x2="0.762" y2="-3.302" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-0.762" y2="-3.302" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="-0.762" width="0.254" layer="94"/>
+</symbol>
+<symbol name="DIV">
+<pin name="AOUT" x="7.62" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-7.62" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-2.54" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-4.572" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="BIN" x="0" y="-7.62" visible="pad" length="middle" direction="in" rot="R90"/>
+<wire x1="-2.54" y1="2.54" x2="-2.54" y2="0" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-2.54" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<wire x1="2.54" y1="2.54" x2="-2.54" y2="2.54" width="0.254" layer="94"/>
+<text x="-0.762" y="-1.778" size="1.4224" layer="94">A
+B</text>
+<wire x1="1.524" y1="0" x2="-1.524" y2="0" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="-0.762" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="0.762" y2="-3.302" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-0.762" y2="-3.302" width="0.254" layer="94"/>
+</symbol>
+<symbol name="LIMITER">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-3.81" x2="-2.54" y2="-3.81" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-3.81" x2="2.54" y2="3.556" width="0.254" layer="94"/>
+<wire x1="2.54" y1="3.556" x2="3.81" y2="3.556" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+</symbol>
+<symbol name="CLIMITER">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-2.54" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-2.54" x2="-2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<wire x1="2.54" y1="2.54" x2="3.81" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+<pin name="AUPPER" x="-10.16" y="2.54" visible="pad" length="middle" direction="in"/>
+<pin name="ALOWER" x="-10.16" y="-2.54" visible="pad" length="middle" direction="in"/>
+<wire x1="-5.08" y1="2.54" x2="2.54" y2="2.54" width="0.254" layer="97" style="shortdash"/>
+<wire x1="-5.08" y1="-2.54" x2="-2.54" y2="-2.54" width="0.254" layer="97" style="shortdash"/>
+</symbol>
+<symbol name="ASWITCH">
+<wire x1="-2.54" y1="-0.889" x2="2.54" y2="-0.889" width="0.254" layer="94"/>
+<wire x1="2.54" y1="0.889" x2="-2.54" y2="0.889" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-0.889" x2="2.54" y2="0.889" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-0.889" x2="-2.54" y2="0.889" width="0.254" layer="94"/>
+<text x="-2.54" y="3.0226" size="1.778" layer="95">&gt;NAME</text>
+<text x="-1.016" y="-3.81" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="R1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1"/>
+<pin name="R2" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
+<pin name="CNTL" x="-2.54" y="-5.08" visible="off" length="short" direction="pas" swaplevel="1" rot="R90"/>
+<wire x1="-2.54" y1="-2.54" x2="2.286" y2="2.286" width="0.254" layer="94"/>
+<wire x1="2.032" y1="2.54" x2="2.286" y2="2.286" width="0.254" layer="94"/>
+<wire x1="2.286" y1="2.286" x2="2.54" y2="2.032" width="0.254" layer="94"/>
+</symbol>
+<symbol name="ZD">
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
+<text x="-1.778" y="1.905" size="1.778" layer="95">&gt;NAME</text>
+<text x="-1.778" y="-3.429" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="A" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
+<pin name="C" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+</symbol>
+<symbol name="DIFF">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+<text x="-0.508" y="-0.508" size="1.778" layer="94">s</text>
+</symbol>
+<symbol name="INTEG">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+<text x="-0.762" y="-2.032" size="1.778" layer="94">1
+s</text>
+<wire x1="-1.524" y1="0" x2="1.524" y2="0" width="0.254" layer="94"/>
+</symbol>
+<symbol name="XFER">
+<pin name="AOUT" x="17.78" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-17.78" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-12.7" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-12.7" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-12.7" y1="5.08" x2="-12.7" y2="0" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="0" x2="-12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="5.08" x2="12.7" y2="5.08" width="0.254" layer="94"/>
+<wire x1="12.7" y1="5.08" x2="12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-5.08" x2="-12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="0" x2="-13.462" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="0" x2="-13.462" y2="-0.762" width="0.254" layer="94"/>
+</symbol>
+<symbol name="SLEW">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-3.81" x2="-2.54" y2="-3.81" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-3.81" x2="2.54" y2="3.556" width="0.254" layer="94"/>
+<wire x1="2.54" y1="3.556" x2="2.794" y2="3.556" width="0.254" layer="94"/>
+<wire x1="2.794" y1="3.556" x2="3.81" y2="3.556" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-3.81" x2="-2.54" y2="3.556" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="3.556" x2="2.54" y2="3.556" width="0.254" layer="94"/>
+</symbol>
+<symbol name="HYST">
+<pin name="AOUT" x="10.16" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN" x="-10.16" y="0" visible="pad" length="middle" direction="in"/>
+<text x="-5.08" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="5.588" size="1.778" layer="96">&gt;VALUE</text>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="0" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="-2.54" x2="-2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="0.762" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0.762" y1="2.54" x2="2.794" y2="2.54" width="0.254" layer="94"/>
+<wire x1="2.794" y1="2.54" x2="3.81" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.842" y2="-0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="-0.762" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-0.762" y1="-2.54" x2="2.794" y2="2.54" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -1358,7 +1576,519 @@ signal. Rise delay and fall delay on the outputs may also be specified independe
 </device>
 </devices>
 </deviceset>
+<deviceset name="SUM" prefix="A">
+<description>This function is a summer block with 2-to-N input ports. Individual gains and
+offsets can be applied to each input and to the output. Each input is added to its respective
+offset and then multiplied by its gain. The results are then summed, multiplied by the
+output gain and added to the output offset. This model will operate in DC, AC, and
+Transient analysis modes.</description>
+<gates>
+<gate name="G$1" symbol="SUM" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE3">
+<connects>
+<connect gate="G$1" pin="AIN1" pad="1"/>
+<connect gate="G$1" pin="AIN2" pad="2"/>
+<connect gate="G$1" pin="AOUT" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model sum summer(in_offset in_gain out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
+<attribute name="SP_IN_GAIN" value="[1 1]" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="[0 0]" constant="no"/>
+<attribute name="SP_OUT_GAIN" value="1" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="GAIN" prefix="A">
+<description>This function is a simple gain block with optional offsets on the input and the
+output. The input offset is added to the input, the sum is then multiplied by the gain, and
+the result is produced by adding the output offset. This model will operate in DC, AC,
+and Transient analysis modes.</description>
+<gates>
+<gate name="G$1" symbol="GAIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model gain gain(in_offset gain out_offset)" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MUL" prefix="A">
+<description>This function is a multiplier block with 2-to-N input ports. Individual gains and
+offsets can be applied to each input and to the output. Each input is added to its respective
+offset and then multiplied by its gain. The results are multiplied along with the output
+gain and are added to the output offset. This model will operate in DC, AC, and Transient
+analysis modes. However, in ac analysis it is important to remember that results are
+invalid unless only ONE INPUT of the multiplier is connected to a node which bears
+an AC signal (this is exemplified by the use of a multiplier to perform a potentiometer
+function: one input is DC, the other carries the AC signal).</description>
+<gates>
+<gate name="G$1" symbol="MUL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE3">
+<connects>
+<connect gate="G$1" pin="AIN1" pad="1"/>
+<connect gate="G$1" pin="AIN2" pad="2"/>
+<connect gate="G$1" pin="AOUT" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model mul mult(out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
+<attribute name="SP_OUT_GAIN" value="1" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="DIV" prefix="A">
+<description>This function is a two-quadrant divider. It takes two inputs; num (numerator) and
+den (denominator). Divide offsets its inputs, multiplies them by their respective gains,
+divides the results, multiplies the quotient by the output gain, and offsets the result. The
+denominator is limited to a value above zero via a user specified lower limit. This limit is
+approached through a quadratic smoothing function, the domain of which may be specified as 
+a fraction of the lower limit value (default), or as an absolute value. This model
+will operate in DC, AC and Transient analysis modes. However, in ac analysis it is important 
+to remember that results are invalid unless only ONE INPUT of the divider is
+connected to a node which bears an AC signal (this is exemplified by the use of the divider 
+to perform a potentiometer function: one input is DC, the other carries the AC
+signal).</description>
+<gates>
+<gate name="G$1" symbol="DIV" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE3">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="3"/>
+<connect gate="G$1" pin="BIN" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model div divide(num_offset num_gain den_offset den_gain den_lower_limit den_domain fraction out_gain out_offset)" constant="no"/>
+<attribute name="SP_DEN_DOMAIN" value="1e-10" constant="no"/>
+<attribute name="SP_DEN_GAIN" value="1" constant="no"/>
+<attribute name="SP_DEN_LOWER_LIMIT" value="1e-10" constant="no"/>
+<attribute name="SP_DEN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_FRACTION" value="false" constant="no"/>
+<attribute name="SP_NUM_GAIN" value="1" constant="no"/>
+<attribute name="SP_NUM_OFFSET" value="0" constant="no"/>
+<attribute name="SP_OUT_GAIN" value="1" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LIMIT" prefix="A">
+<description>The Limiter is a single input, single output function similar to the Gain Block.
+However, the output of the Limiter function is restricted to the range specified by the
+output lower and upper limits. This model will operate in DC, AC and Transient analysis
+modes. Note that the limit range is the value BELOW THE UPPER LIMIT AND ABOVE
+THE LOWER LIMIT at which smoothing of the output begins. For this model, then, the
+limit range represents the delta WITH RESPECT TO THE OUTPUT LEVEL at which
+smoothing occurs. Thus, for an input gain of 2.0 and output limits of 1.0 and -1.0 volts,
+the output will begin to smooth out at ±0.9 volts, which occurs when the input value is at
+±0.4.</description>
+<gates>
+<gate name="G$1" symbol="LIMITER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model limit limit(in_offset gain out_lower_limit out_upper_limit limit_range fraction)" constant="no"/>
+<attribute name="SP_FRACTION" value="false" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_LIMITER_RANGE" value="1e-6" constant="no"/>
+<attribute name="SP_OUT_LOWER_LIMIT" value="0" constant="no"/>
+<attribute name="SP_OUT_UPPER_LIMIT" value="1" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="CLIMIT" prefix="A">
+<description>The Controlled Limiter is a single input, single output function similar to the Gain
+Block. However, the output of the Limiter function is restricted to the range specified by
+the output lower and upper limits. This model will operate in DC, AC, and Transient analysis modes. 
+Note that the limit range is the value BELOW THE CNTL_UPPER LIMIT
+AND ABOVE THE CNTL_LOWER LIMIT at which smoothing of the output begins
+(minimum positive value of voltage must exist between the CNTL_UPPER input and the
+CNTL_LOWER input at all times). For this model, then, the limit range represents the
+delta WITH RESPECT TO THE OUTPUT LEVEL at which smoothing occurs. Thus,
+for an input gain of 2.0 and output limits of 1.0 and -1.0 volts, the output will begin to
+smooth out at ±0.9 volts, which occurs when the input value is at ±0.4. Note also that
+the Controlled Limiter code tests the input values of cntl_lower and cntl_upper to make
+sure that they are spaced far enough apart to guarantee the existence of a linear range between them. 
+The range is calculated as the difference between (cntl_upper - upper_delta
+- limit_range) and (cntl_lower + lower_delta + limit_range) and must be greater than or
+equal to zero. Note that when the limit range is specified as a fractional value, the limit
+range used in the above is taken as the calculated fraction of the difference between cntl
+upper and cntl lower. Still, the potential exists for too great a limit range value to be
+specified for proper operation, in which case the model will return an error message.</description>
+<gates>
+<gate name="G$1" symbol="CLIMITER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE4">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="ALOWER" pad="3"/>
+<connect gate="G$1" pin="AOUT" pad="4"/>
+<connect gate="G$1" pin="AUPPER" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model climit climit(in_offset gain upper_delta lower_delta limit_range fraction)" constant="no"/>
+<attribute name="SP_FRACTION" value="false" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
+<attribute name="SP_LOWER_DELTA" value="0" constant="no"/>
+<attribute name="SP_UPPER_DELTA" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ASWITCH" prefix="A">
+<description>The Analog Switch is a resistor that varies either logarithmically or linearly between 
+specified values of a controlling input voltage or current. Note that the input is
+not internally limited. Therefore, if the controlling signal exceeds the specified OFF state
+or ON state value, the resistance may become excessively large or excessively small (in the case of logarithmic dependence), 
+or may become negative (in the case of linear dependence). 
+For the experienced user, these excursions may prove valuable for modeling
+certain devices, but in most cases you are advised to add limiting of the controlling input
+if the possibility of excessive control value variation exists.</description>
+<gates>
+<gate name="G$1" symbol="ASWITCH" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE3">
+<connects>
+<connect gate="G$1" pin="CNTL" pad="1"/>
+<connect gate="G$1" pin="R1" pad="2"/>
+<connect gate="G$1" pin="R2" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model aswitch aswitch(cntl_off cntl_on r_off r_on log)" constant="no"/>
+<attribute name="SPICE_PORTS" value="1 ( 2 3 )" constant="no"/>
+<attribute name="SP_CNTL_OFF" value="0" constant="no"/>
+<attribute name="SP_CNTL_ON" value="1" constant="no"/>
+<attribute name="SP_LOG" value="false" constant="no"/>
+<attribute name="SP_R_OFF" value="1e12" constant="no"/>
+<attribute name="SP_R_ON" value="1" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ZENER" prefix="A">
+<description>The Zener Diode models the DC characteristics of most zeners. This model
+differs from the Diode/Rectifier by providing a user-defined dynamic resistance in the
+reverse breakdown region. The forward characteristic is defined by only a single point,
+since most data sheets for zener diodes do not give detailed characteristics in the forward
+region.
+&lt;p&gt;
+The first three parameters define the DC characteristics of the zener in the breakdown
+region and are usually explicitly given on the data sheet.
+The saturation current refers to the relatively constant reverse current that is produced
+when the voltage across the zener is negative, but breakdown has not been reached. The
+reverse leakage current determines the slight increase in reverse current as the voltage
+across the zener becomes more negative. It is modeled as a resistance parallel to the
+zener with value v breakdown / i rev.
+&lt;p&gt;
+Note that the limit switch parameter engages an internal limiting function for the zener.
+This can, in some cases, prevent the simulator from converging to an unrealistic solution
+if the voltage across or current into the device is excessive. If use of this feature fails to
+yield acceptable results, the convlimit option should be tried (add the following statement
+to the SPICE input deck: .options convlimit).</description>
+<gates>
+<gate name="G$1" symbol="ZD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="A" pad="1"/>
+<connect gate="G$1" pin="C" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model zener zener(v_breakdown i_breakdown i_sat n_forward limit_switch)" constant="no"/>
+<attribute name="SP_I_BREAKDOWN" value="2e-2" constant="no"/>
+<attribute name="SP_I_SAT" value="1e-12" constant="no"/>
+<attribute name="SP_LIMIT_SWITCH" value="false" constant="no"/>
+<attribute name="SP_N_FORWARD" value="1" constant="no"/>
+<attribute name="SP_V_BREAKDOWN" value="4.7" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="DT" prefix="A">
+<description>The Differentiator block is a simple derivative stage that approximates the time
+derivative of an input signal by calculating the incremental slope of that signal since the
+previous time point. The block also includes gain and output offset parameters to allow
+for tailoring of the required signal, and output upper and lower limits to prevent convergence 
+errors resulting from excessively large output values. The incremental value of
+output below the output upper limit and above the output lower limit at which smoothing
+begins is specified via the limit range parameter. In AC analysis, the value returned is
+equal to the radian frequency of analysis multiplied by the gain.
+Note that since truncation error checking is not included in the d_dt block, it is not recommended 
+that the model be used to provide an integration function through the use of
+a feedback loop. Such an arrangement could produce erroneous results. Instead, you
+should make use of the "integrate" model, which does include truncation error checking
+for enhanced accuracy.</description>
+<gates>
+<gate name="G$1" symbol="DIFF" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model dt d_dt(gain out_offset out_lower_limit out_upper_limit limit_range)" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
+<attribute name="SP_OUT_LOWER_LIMIT" value="1e-10" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+<attribute name="SP_OUT_UPPER_LIMIT" value="1e10" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="INT" prefix="A">
+<description>The Integrator block is a simple integration stage that approximates the integral
+with respect to time of an input signal. The block also includes gain and input offset
+parameters to allow for tailoring of the required signal, and output upper and lower limits
+to prevent convergence errors resulting from excessively large output values. Note that
+these limits specify integrator behavior similar to that found in an operational amplifierbased integration stage, 
+in that once a limit is reached, additional storage does not occur.
+Thus, the input of a negative value to an integrator which is currently driving at the out
+upper limit level will immediately cause a drop in the output, regardless of how long
+the integrator was previously summing positive inputs. The incremental value of output
+below the output upper limit and above the output lower limit at which smoothing begins
+is specified via the limit range parameter. In AC analysis, the value returned is equal to
+the gain divided by the radian frequency of analysis.
+Note that truncation error checking is included in the “int” block. This should provide
+for a more accurate simulation of the time integration function, since the model will
+inherently request smaller time increments between simulation points if truncation errors
+would otherwise be excessive.</description>
+<gates>
+<gate name="G$1" symbol="INTEG" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model int int(in_offset gain out_lower_limit out_upper_limit limit_range out_ic)" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
+<attribute name="SP_OUT_IC" value="0" constant="no"/>
+<attribute name="SP_OUT_LOWER_LIMIT" value="1e-10" constant="no"/>
+<attribute name="SP_OUT_UPPER_LIMIT" value="1e10" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="XFER" prefix="A">
+<description>The s-domain transfer function is a single input, single output transfer function
+in the Laplace transform variable “s” that allows for flexible modulation of the frequency
+domain characteristics of a signal. Ac and transient simulations are supported. The code
+model may be configured to produce an arbitrary s-domain transfer function with the
+following restrictions:
+&lt;ul&gt;
+&lt;li&gt;The degree of the numerator polynomial cannot exceed that
+of the denominator polynomial in the variable "s".
+&lt;li&gt;The coefficients for a polynomial must be stated
+explicitly. That is, if a coefficient is zero, it must be
+included as an input to the num coeff or den coeff vector.
+&lt;/ul&gt;
+The order of the coefficient parameters is from that associated with the highest-powered term
+decreasing to that of the lowest. Thus, for the coefficient parameters specified below, the equa-
+tion in “s” is shown:
+&lt;ul&gt;
+&lt;li&gt;gain=0.139713 int_ic=[0 0 0]
+&lt;li&gt;num_coeff=[1.0 0.0 0.07464102]
+&lt;li&gt;den_coeff=[1.0 0.998942 0.01170077])
+&lt;/ul&gt;
+specifies a transfer function of the form:
+&lt;ul&gt;
+N(s) = 0.139713 * (s^2 + 0.07464102) / (s^2 + 0.998942 s + 0.01170077)
+&lt;/ul&gt;
+The s-domain transfer function includes gain and in_offset (input offset) parameters to allow
+for tailoring of the required signal. There are no limits on the internal signal values or on
+the output value of the s-domain transfer function, so you are cautioned to specify gain and
+coefficient values that will not cause the model to produce excessively large values. In AC
+analysis, the value returned is equal to the real and imaginary components of the total s-domain
+transfer function at each frequency of interest.
+&lt;p&gt;
+The denormalized_freq term allows you to specify coefficients for a normalized filter (i.e. one
+in which the frequency of interest is 1 rad/s). Once these coefficients are included, specifying
+the denormalized frequency value “shifts” the corner frequency to the actual one of interest. As
+an example, the following transfer function describes a Chebyshev low-pass filter with a corner
+(pass-band) frequency of 1 rad/s:
+&lt;ul&gt;
+N(s) = 0.139713 * 1 / (s^2 +1.09773s+1.10251)
+&lt;/ul&gt;
+In order to define an s_xfer model for the above, but with the corner frequency equal to 1500
+rad/s (9425 Hz), the following instance and model lines would be needed:
+&lt;ul&gt;
+&lt;li&gt;num_coeff=[1]
+&lt;li&gt;den_coeff=[1 1.09773 1.10251]
+&lt;li&gt;int_ic=[0 0 0]
+&lt;li&gt;denormalized_freq=1500
+&lt;/ul&gt;
+In the above, you add the normalized coefficients and scale the filter through the use of the
+denormalized freq parameter. Similar results could have been achieved by performing the denormalization 
+prior to specification of the coefficients, and setting denormalized freq to the
+value 1.0 (or not specifying the frequency, as the default is 1.0 rad/s) Note in the above that
+frequencies are ALWAYS SPECIFIED AS RADIANS/SECOND.
+&lt;p&gt;
+Truncation error checking is included in the s-domain transfer block. This should provide for
+more accurate simulations, since the model will inherently request smaller time increments
+between simulation points if truncation errors would otherwise be excessive.
+&lt;p&gt;
+The int_ic parameter is an array that must be of the same size as the array of values specified
+for the den_coeff parameter. Even if a 0 start value is required, you have to add the specific
+int_ic vector to the set of coefficients (see the examples above).</description>
+<gates>
+<gate name="G$1" symbol="XFER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model xfer s_xfer(in_offset gain num_coeff den_coeff int_ic denormalized_freq)" constant="no"/>
+<attribute name="SP_DENORMALIZED_FREQ" value="1" constant="no"/>
+<attribute name="SP_DEN_COEFF" value="[1.0 0.998942 0.01170077]" constant="no"/>
+<attribute name="SP_GAIN" value="1" constant="no"/>
+<attribute name="SP_INT_IC" value="[0 0 0]" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="0" constant="no"/>
+<attribute name="SP_NUM_COEFF" value="[1.0 0.0 0.07464102]" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SLEW" prefix="A">
+<description>This function is a simple slew rate block that limits the absolute slope of the
+output with respect to time to some maximum or value. The actual slew rate effects of
+over-driving an amplifier circuit can thus be accurately modeled by cascading the amplifier with this model. 
+The units used to describe the maximum rising and falling slope
+values are expressed in volts or amperes per second. Thus a desired slew rate of 0.5 V/μs
+will be expressed as 0.5e+6, etc.
+&lt;p&gt;
+The slew rate block will continue to raise or lower its output until the difference between
+the input and the output values is zero. Thereafter, it will resume following the input signal, 
+unless the slope again exceeds its rise or fall slope limits. The range input specifies
+a smoothing region above or below the input value. Whenever the model is slewing and
+the output comes to within the input + or - the range value, the partial derivative of the
+output with respect to the input will begin to smoothly transition from 0.0 to 1.0. When
+the model is no longer slewing (output = input), dout/din will equal 1.0.</description>
+<gates>
+<gate name="G$1" symbol="SLEW" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model slew slew(rise_slope fall_slope range)" constant="no"/>
+<attribute name="SP_FALL_SLOPE" value="1e9" constant="no"/>
+<attribute name="SP_RANGE" value="0.1" constant="no"/>
+<attribute name="SP_RISE_SLOPE" value="1e9" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="HYST" prefix="A">
+<description>The Hysteresis block is a simple buffer stage that provides hysteresis of the output
+with respect to the input. The in low and in high parameter values specify the center
+voltage or current inputs about which the hysteresis effect operates. The output values
+are limited to out lower limit and out upper limit. The value of “hyst” is added to the in
+low and in high points in order to specify the points at which the slope of the hysteresis
+function would normally change abruptly as the input transitions from a low to a high
+value. Likewise, the value of “hyst” is subtracted from the in high and in low values in
+order to specify the points at which the slope of the hysteresis function would normally
+change abruptly as the input transitions from a high to a low value. In fact, the slope of the
+hysteresis function is never allowed to change abruptly but is smoothly varied whenever
+the input domain smoothing parameter is set greater than zero.</description>
+<gates>
+<gate name="G$1" symbol="HYST" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE2">
+<connects>
+<connect gate="G$1" pin="AIN" pad="1"/>
+<connect gate="G$1" pin="AOUT" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model hyst hyst(in_low in_high hyst out_lower_limit out_upper_limit input_domain fraction)" constant="no"/>
+<attribute name="SP_FRACTION" value="true" constant="no"/>
+<attribute name="SP_HYST" value="0.1" constant="no"/>
+<attribute name="SP_INPUT_DOMAIN" value="0.01" constant="no"/>
+<attribute name="SP_IN_HIGH" value="1" constant="no"/>
+<attribute name="SP_IN_LOW" value="0" constant="no"/>
+<attribute name="SP_OUT_LOWER_LIMIT" value="0" constant="no"/>
+<attribute name="SP_OUT_UPPER_LIMIT" value="1" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>

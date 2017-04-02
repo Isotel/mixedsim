@@ -553,12 +553,12 @@ void describePart(UL_PART part)
         for (int i=0; i < n; i++)
         {
             // Pass through
-            if (ports_pins[i]=="[")
+            if (ports_pins[i]=="[" || ports_pins[i]=="(")
             {
                 printf("%s", ports_pins[i]);
                 addspace = 0;
             }
-            else if (ports_pins[i]=="]")
+            else if (ports_pins[i]=="]" || ports_pins[i]==")")
             {
                 printf("%s", ports_pins[i]);
                 addspace = 1;
