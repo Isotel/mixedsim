@@ -767,6 +767,25 @@ s</text>
 <wire x1="-2.54" y1="-2.54" x2="-0.762" y2="-2.54" width="0.254" layer="94"/>
 <wire x1="-0.762" y1="-2.54" x2="2.794" y2="2.54" width="0.254" layer="94"/>
 </symbol>
+<symbol name="SUM3">
+<pin name="AOUT" x="7.62" y="0" visible="pad" length="middle" direction="out" rot="R180"/>
+<pin name="AIN1" x="-7.62" y="0" visible="pad" length="middle" direction="in"/>
+<text x="2.54" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-4.572" size="1.778" layer="96">&gt;VALUE</text>
+<circle x="0" y="0" radius="2.54" width="0.254" layer="94"/>
+<pin name="AIN2" x="0" y="-7.62" visible="pad" length="middle" direction="in" rot="R90"/>
+<wire x1="0" y1="1.016" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-1.016" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.016" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="1.016" y2="0" width="0.254" layer="94"/>
+<wire x1="0.762" y1="-3.302" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="-0.762" y2="-3.302" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="0.762" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-3.302" y2="-0.762" width="0.254" layer="94"/>
+<pin name="AIN3" x="0" y="7.62" visible="pad" length="middle" direction="in" rot="R270"/>
+<wire x1="0" y1="2.54" x2="0.762" y2="3.302" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-0.762" y2="3.302" width="0.254" layer="94"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="VSOURCE" prefix="V" uservalue="yes">
@@ -1699,7 +1718,7 @@ signal).</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="LIMIT" prefix="A">
+<deviceset name="LIMITER" prefix="A">
 <description>The Limiter is a single input, single output function similar to the Gain Block.
 However, the output of the Limiter function is restricted to the range specified by the
 output lower and upper limits. This model will operate in DC, AC and Transient analysis
@@ -1720,7 +1739,7 @@ the output will begin to smooth out at ±0.9 volts, which occurs when the input 
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model limit limit(in_offset gain out_lower_limit out_upper_limit limit_range fraction)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model limiter limit(in_offset gain out_lower_limit out_upper_limit limit_range fraction)" constant="no"/>
 <attribute name="SP_FRACTION" value="false" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
@@ -1732,7 +1751,7 @@ the output will begin to smooth out at ±0.9 volts, which occurs when the input 
 </device>
 </devices>
 </deviceset>
-<deviceset name="CLIMIT" prefix="A">
+<deviceset name="CLIMITER" prefix="A">
 <description>The Controlled Limiter is a single input, single output function similar to the Gain
 Block. However, the output of the Limiter function is restricted to the range specified by
 the output lower and upper limits. This model will operate in DC, AC, and Transient analysis modes. 
@@ -1764,7 +1783,7 @@ specified for proper operation, in which case the model will return an error mes
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model climit climit(in_offset gain upper_delta lower_delta limit_range fraction)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model climiter climit(in_offset gain upper_delta lower_delta limit_range fraction)" constant="no"/>
 <attribute name="SP_FRACTION" value="false" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
@@ -2077,6 +2096,36 @@ the input domain smoothing parameter is set greater than zero.</description>
 <attribute name="SP_IN_LOW" value="0" constant="no"/>
 <attribute name="SP_OUT_LOWER_LIMIT" value="0" constant="no"/>
 <attribute name="SP_OUT_UPPER_LIMIT" value="1" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SUM3" prefix="A">
+<description>This function is a summer block with 2-to-N input ports. Individual gains and
+offsets can be applied to each input and to the output. Each input is added to its respective
+offset and then multiplied by its gain. The results are then summed, multiplied by the
+output gain and added to the output offset. This model will operate in DC, AC, and
+Transient analysis modes.</description>
+<gates>
+<gate name="G$1" symbol="SUM3" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SPICE4">
+<connects>
+<connect gate="G$1" pin="AIN1" pad="1"/>
+<connect gate="G$1" pin="AIN2" pad="2"/>
+<connect gate="G$1" pin="AIN3" pad="3"/>
+<connect gate="G$1" pin="AOUT" pad="4"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="SPICE_MODEL" value=".model sum3 summer(in_offset in_gain out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_PORTS" value="[ 1 2 3 ] 4" constant="no"/>
+<attribute name="SP_IN_GAIN" value="[1 1 1]" constant="no"/>
+<attribute name="SP_IN_OFFSET" value="[0 0 0]" constant="no"/>
+<attribute name="SP_OUT_GAIN" value="1" constant="no"/>
+<attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
 </technology>
 </technologies>
 </device>
