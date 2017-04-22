@@ -166,7 +166,7 @@
 "<li><b>SPICE_MODEL   = ... </b> provides a model. When this attribute is set, auto include will be disabled "
 "unless SPICE_INCLUDE is given. This attribute can be used even to describe a complete sub-circuits. "
 "Use \ for a new line. Note that in Eagle a model can describe multiple package "
-"variant that are distinguished by the technology suffix.<br>"
+"variant that are distinguished by the technology suffix. It is possible to use part's value for model name as: .model >value ...<br>"
 
 "<li><b>SP_<param> = <value></b>  The Spice Parameter: SP_<param> when non-zero is placed as <param>=<value> "
 "a macro inside the SPICE_MODEL block. I.e.: SPICE_MODEL = <b>(gain)</b>, and "
@@ -347,15 +347,23 @@ string withoutDefaultValue(string value)
 
 
 /**
- * Build a SPICE MODEL with SP_<param>=<value>
+ * Build a SPICE MODEL with SP_<param>=<value> if part name does not include # character
  *
  * Operate with lower case only
  */
 string buildModel(UL_PART part)
 {
     string model = getAttribute(part, "SPICE_MODEL");
-    if (model == "")
+    if (model == "" || strrchr(part.value, '#') != -1)
         return "";
+        
+    /*
+     * Check for >value before the model ... to replace it with the eagle block value
+     */
+    int model_value_idx = strstr(strlwr(strsub(model, 0, strchr(model, '('))), ">value", 0);
+    if (model_value_idx > 0) {
+        model = strsub(model, 0, model_value_idx) + part.value + strsub(model, model_value_idx+6);
+    }
         
     /*
      * For each SP_* attribute with a defined value find and replace the string in the model text
@@ -444,6 +452,11 @@ void describePart(UL_PART part)
             value = part.value + value;
         }
     }
+    
+    /* Remove special characters from value, as # which designate ignore model line */
+    int hash_idx = strchr(value, '#');
+    if (hash_idx >= 0)
+        value[hash_idx] = ' ';
         
     /* check for unused and open directives to skip the part */
     string value_lwr = strlwr( value );

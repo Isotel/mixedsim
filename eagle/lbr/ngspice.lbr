@@ -875,7 +875,7 @@ addition, asynchronous set and reset signals exist, and each of the three method
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model dff d_dff (clk_delay set_delay reset_delay data_load clk_load set_load reset_load rise_delay fall_delay ic)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_dff (clk_delay set_delay reset_delay data_load clk_load set_load reset_load rise_delay fall_delay ic)" constant="no"/>
 <attribute name="SP_CLK_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_CLK_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_DATA_LOAD" value="1pF" constant="no"/>
@@ -905,7 +905,7 @@ transfer of analog information to digital values and back again. The second devi
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model adc_buf adc_bridge(in_low in_high rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE adc_bridge(in_low in_high rise_delay fall_delay)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 ] [ 2 ]" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_IN_HIGH" value="2V" constant="no"/>
@@ -931,7 +931,7 @@ the adc_bridge (which takes an analog value and maps it to a digital one).The da
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model dac_buf dac_bridge(out_low out_high out_undef input_load t_rise t_fall)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE dac_bridge(out_low out_high out_undef input_load t_rise t_fall)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 ] [ 2 ]" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_OUT_HIGH" value="1V" constant="no"/>
@@ -958,7 +958,7 @@ the adc_bridge (which takes an analog value and maps it to a digital one).The da
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model d2real d_to_real (zero one delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_to_real (zero one delay)" constant="no"/>
 <attribute name="SP_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_ONE" value="1" constant="no"/>
 <attribute name="SP_ZERO" value="0" constant="no"/>
@@ -981,7 +981,7 @@ the adc_bridge (which takes an analog value and maps it to a digital one).The da
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model z_delay real_delay (delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE real_delay (delay)" constant="no"/>
 <attribute name="SP_DELAY" value="1ns" constant="no"/>
 </technology>
 </technologies>
@@ -1001,7 +1001,7 @@ the adc_bridge (which takes an analog value and maps it to a digital one).The da
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model rgain real_gain(in_offset gain out_offset delay ic)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE real_gain(in_offset gain out_offset delay ic)" constant="no"/>
 <attribute name="SP_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IC" value="0" constant="no"/>
@@ -1025,7 +1025,7 @@ the adc_bridge (which takes an analog value and maps it to a digital one).The da
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model r2v real_to_v(gain transition_time)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE real_to_v(gain transition_time)" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_TRANSITION_TIME" value="1ns" constant="no"/>
 </technology>
@@ -1064,7 +1064,7 @@ The output waveform, which is the equivalent of a digital clock signal, has rise
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model osc d_osc(cntl_array freq_array duty_cycle init_phase rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_osc(cntl_array freq_array duty_cycle init_phase rise_delay fall_delay)" constant="no"/>
 <attribute name="SP_CNTL_ARRAY" value="[0 5]" constant="no"/>
 <attribute name="SP_DUTY_CYCLE" value="0.5" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
@@ -1090,7 +1090,7 @@ The output waveform, which is the equivalent of a digital clock signal, has rise
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model buf d_buffer (rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_buffer (rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_RISE_DELAY" value="1ns" constant="no"/>
@@ -1113,7 +1113,7 @@ The model also posts an input load value (in farads) based on the parameter inpu
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model inv d_inverter (rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_inverter (rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_RISE_DELAY" value="1ns" constant="no"/>
@@ -1140,7 +1140,7 @@ The output of this model does NOT, however, respond to the total loading it sees
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model and d_and(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_and(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1171,7 +1171,7 @@ specified delays.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model nand d_nand(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_nand(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1202,7 +1202,7 @@ delays.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model or d_or(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_or(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1233,7 +1233,7 @@ delays.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model nor d_nor(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_nor(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1264,7 +1264,7 @@ floating input causes the output to also go UNKNOWN.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model xor d_xor(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_xor(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1296,7 +1296,7 @@ floating input causes the output to also go UNKNOWN.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model xnor d_xnor(rise_delay fall_delay input_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_xnor(rise_delay fall_delay input_load)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1331,7 +1331,7 @@ Likewise, any UNKNOWN input on the enable line causes the output to go to an UND
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model bufen d_tristate(delay input_load enable_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_tristate(delay input_load enable_load)" constant="no"/>
 <attribute name="SP_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_ENABLE_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_INPUT_LOAD" value="1pF" constant="no"/>
@@ -1356,7 +1356,7 @@ model posts an input load value (in farads) based on the parameters “load”.<
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model pup d_pullup( load )" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_pullup( load )" constant="no"/>
 <attribute name="SP_LOAD" value="1pF" constant="no"/>
 </technology>
 </technologies>
@@ -1379,7 +1379,7 @@ The model posts an input load value (in farads) based on the parameters “load�
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model pdn d_pulldown( load )" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_pulldown( load )" constant="no"/>
 <attribute name="SP_LOAD" value="1pF" constant="no"/>
 </technology>
 </technologies>
@@ -1412,7 +1412,7 @@ automatically.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model jkff d_jkff (clk_delay set_delay reset_delay ic jk_load clk_load set_load reset_load rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_jkff (clk_delay set_delay reset_delay ic jk_load clk_load set_load reset_load rise_delay fall_delay)" constant="no"/>
 <attribute name="SP_CLK_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_CLK_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
@@ -1452,7 +1452,7 @@ Note that any UNKNOWN inputs other than t immediately cause the output to go UNK
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".modeltdff d_tff (clk_delay set_delay reset_delay ic t_load clk_load set_load reset_load rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_tff (clk_delay set_delay reset_delay ic t_load clk_load set_load reset_load rise_delay fall_delay)" constant="no"/>
 <attribute name="SP_CLK_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_CLK_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
@@ -1496,7 +1496,7 @@ cause the output to go UNKNOWN.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model dlatch d_dlatch (data_delay enable_delay set_delay reset_delay ic data_load enable_load set_load reset_load rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_dlatch (data_delay enable_delay set_delay reset_delay ic data_load enable_load set_load reset_load rise_delay fall_delay)" constant="no"/>
 <attribute name="SP_DATA_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_DATA_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_ENABLE_DELAY" value="1ns" constant="no"/>
@@ -1550,7 +1550,7 @@ cause the output to go UNKNOWN.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model srlatch d_srlatch (sr_delay enable_delay set_delay reset_delay ic sr_load enable_load set_load reset_load rise_delay fall_delay)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_srlatch (sr_delay enable_delay set_delay reset_delay ic sr_load enable_load set_load reset_load rise_delay fall_delay)" constant="no"/>
 <attribute name="SP_ENABLE_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_ENABLE_LOAD" value="1pF" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
@@ -1583,7 +1583,7 @@ signal. Rise delay and fall delay on the outputs may also be specified independe
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model fdiv d_fdiv( div_factor high_cycles i_count rise_delay fall_delay freq_in_load)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_fdiv( div_factor high_cycles i_count rise_delay fall_delay freq_in_load)" constant="no"/>
 <attribute name="SP_DIV_FACTOR" value="2" constant="no"/>
 <attribute name="SP_FALL_DELAY" value="1ns" constant="no"/>
 <attribute name="SP_FREQ_IN_LOAD" value="1pF" constant="no"/>
@@ -1613,7 +1613,7 @@ Transient analysis modes.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model sum summer(in_offset in_gain out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE summer(in_offset in_gain out_gain out_offset)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_IN_GAIN" value="[1 1]" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="[0 0]" constant="no"/>
@@ -1640,7 +1640,7 @@ and Transient analysis modes.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model gain gain(in_offset gain out_offset)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE gain(in_offset gain out_offset)" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
 <attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
@@ -1670,7 +1670,7 @@ function: one input is DC, the other carries the AC signal).</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model mul mult(out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE mult(out_gain out_offset)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 ] 3" constant="no"/>
 <attribute name="SP_OUT_GAIN" value="1" constant="no"/>
 <attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
@@ -1703,7 +1703,7 @@ signal).</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model div divide(num_offset num_gain den_offset den_gain den_lower_limit den_domain fraction out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE divide(num_offset num_gain den_offset den_gain den_lower_limit den_domain fraction out_gain out_offset)" constant="no"/>
 <attribute name="SP_DEN_DOMAIN" value="1e-10" constant="no"/>
 <attribute name="SP_DEN_GAIN" value="1" constant="no"/>
 <attribute name="SP_DEN_LOWER_LIMIT" value="1e-10" constant="no"/>
@@ -1739,7 +1739,7 @@ the output will begin to smooth out at ±0.9 volts, which occurs when the input 
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model limiter limit(in_offset gain out_lower_limit out_upper_limit limit_range fraction)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE limit(in_offset gain out_lower_limit out_upper_limit limit_range fraction)" constant="no"/>
 <attribute name="SP_FRACTION" value="false" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
@@ -1783,7 +1783,7 @@ specified for proper operation, in which case the model will return an error mes
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model climiter climit(in_offset gain upper_delta lower_delta limit_range fraction)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE climit(in_offset gain upper_delta lower_delta limit_range fraction)" constant="no"/>
 <attribute name="SP_FRACTION" value="false" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
@@ -1816,7 +1816,7 @@ if the possibility of excessive control value variation exists.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model aswitch aswitch(cntl_off cntl_on r_off r_on log)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE aswitch(cntl_off cntl_on r_off r_on log)" constant="no"/>
 <attribute name="SPICE_PORTS" value="1 ( 2 3 )" constant="no"/>
 <attribute name="SP_CNTL_OFF" value="0" constant="no"/>
 <attribute name="SP_CNTL_ON" value="1" constant="no"/>
@@ -1859,7 +1859,7 @@ to the SPICE input deck: .options convlimit).</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model zener zener(v_breakdown i_breakdown i_sat n_forward limit_switch)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE zener(v_breakdown i_breakdown i_sat n_forward limit_switch)" constant="no"/>
 <attribute name="SP_I_BREAKDOWN" value="2e-2" constant="no"/>
 <attribute name="SP_I_SAT" value="1e-12" constant="no"/>
 <attribute name="SP_LIMIT_SWITCH" value="false" constant="no"/>
@@ -1895,7 +1895,7 @@ for enhanced accuracy.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model dt d_dt(gain out_offset out_lower_limit out_upper_limit limit_range)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE d_dt(gain out_offset out_lower_limit out_upper_limit limit_range)" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
 <attribute name="SP_OUT_LOWER_LIMIT" value="1e-10" constant="no"/>
@@ -1934,13 +1934,13 @@ would otherwise be excessive.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model int int(in_offset gain out_lower_limit out_upper_limit limit_range out_ic)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE int(in_offset gain out_lower_limit out_upper_limit limit_range out_ic)" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="0" constant="no"/>
 <attribute name="SP_LIMIT_RANGE" value="1e-6" constant="no"/>
 <attribute name="SP_OUT_IC" value="0" constant="no"/>
-<attribute name="SP_OUT_LOWER_LIMIT" value="1e-10" constant="no"/>
-<attribute name="SP_OUT_UPPER_LIMIT" value="1e10" constant="no"/>
+<attribute name="SP_OUT_LOWER_LIMIT" value="-1e12" constant="no"/>
+<attribute name="SP_OUT_UPPER_LIMIT" value="1e12" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -2018,7 +2018,7 @@ int_ic vector to the set of coefficients (see the examples above).</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model xfer s_xfer(in_offset gain num_coeff den_coeff int_ic denormalized_freq)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE s_xfer(in_offset gain num_coeff den_coeff int_ic denormalized_freq)" constant="no"/>
 <attribute name="SP_DENORMALIZED_FREQ" value="1" constant="no"/>
 <attribute name="SP_DEN_COEFF" value="[1.0 0.998942 0.01170077]" constant="no"/>
 <attribute name="SP_GAIN" value="1" constant="no"/>
@@ -2056,7 +2056,7 @@ the model is no longer slewing (output = input), dout/din will equal 1.0.</descr
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model slew slew(rise_slope fall_slope range)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE slew(rise_slope fall_slope range)" constant="no"/>
 <attribute name="SP_FALL_SLOPE" value="1e9" constant="no"/>
 <attribute name="SP_RANGE" value="" constant="no"/>
 <attribute name="SP_RISE_SLOPE" value="1e9" constant="no"/>
@@ -2088,7 +2088,7 @@ the input domain smoothing parameter is set greater than zero.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model hyst hyst(in_low in_high hyst out_lower_limit out_upper_limit input_domain fraction)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE hyst(in_low in_high hyst out_lower_limit out_upper_limit input_domain fraction)" constant="no"/>
 <attribute name="SP_FRACTION" value="true" constant="no"/>
 <attribute name="SP_HYST" value="0.1" constant="no"/>
 <attribute name="SP_INPUT_DOMAIN" value="0.01" constant="no"/>
@@ -2120,7 +2120,7 @@ Transient analysis modes.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="SPICE_MODEL" value=".model sum3 summer(in_offset in_gain out_gain out_offset)" constant="no"/>
+<attribute name="SPICE_MODEL" value=".model &gt;VALUE summer(in_offset in_gain out_gain out_offset)" constant="no"/>
 <attribute name="SPICE_PORTS" value="[ 1 2 3 ] 4" constant="no"/>
 <attribute name="SP_IN_GAIN" value="[1 1 1]" constant="no"/>
 <attribute name="SP_IN_OFFSET" value="[0 0 0]" constant="no"/>
