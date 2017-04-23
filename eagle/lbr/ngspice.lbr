@@ -2138,7 +2138,7 @@ Transient analysis modes.</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="SPICE-PARAM" prefix="XPIN" uservalue="yes">
+<deviceset name="SPICE-PARAM" prefix="SPARAM" uservalue="yes">
 <description>&lt;b&gt;Sub-circuit Parameter&lt;/b&gt;
 &lt;p&gt;
 When schematics is exported as a sub-circuit then it will include also parameters from this element. 

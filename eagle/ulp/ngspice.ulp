@@ -949,7 +949,7 @@ schematic(sch)
         sch.sheets(sht) {
             if ( !is_sheetselected(sht.number) ) continue;
             sht.parts(part) {
-                if ( getAttribute(part, "SPICE_IGNORE") != "" ) {
+                if ( getAttribute(part, "SPICE_IGNORE") != "" && part.device.name != "SPICE-PARAM" ) {
                     printf("* - %s: SPICE_IGNORE\n", part.name);
                 }            
                 string val;
