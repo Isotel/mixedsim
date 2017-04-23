@@ -786,6 +786,13 @@ s</text>
 <wire x1="0" y1="2.54" x2="0.762" y2="3.302" width="0.254" layer="94"/>
 <wire x1="0" y1="2.54" x2="-0.762" y2="3.302" width="0.254" layer="94"/>
 </symbol>
+<symbol name="PARAM">
+<wire x1="1.143" y1="-0.254" x2="14.478" y2="-0.254" width="0.2032" layer="95"/>
+<wire x1="12.7" y1="2.032" x2="0" y2="2.032" width="0.2032" layer="95"/>
+<wire x1="0" y1="2.032" x2="1.143" y2="-0.254" width="0.2032" layer="95"/>
+<text x="1.27" y="0.127" size="1.016" layer="96">&gt;VALUE</text>
+<wire x1="14.478" y1="-0.254" x2="12.7" y2="2.032" width="0.2032" layer="95"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="VSOURCE" prefix="V" uservalue="yes">
@@ -2126,6 +2133,27 @@ Transient analysis modes.</description>
 <attribute name="SP_IN_OFFSET" value="[0 0 0]" constant="no"/>
 <attribute name="SP_OUT_GAIN" value="1" constant="no"/>
 <attribute name="SP_OUT_OFFSET" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SPICE-PARAM" prefix="XPIN" uservalue="yes">
+<description>&lt;b&gt;Sub-circuit Parameter&lt;/b&gt;
+&lt;p&gt;
+When schematics is exported as a sub-circuit then it will include also parameters from this element. 
+&lt;p&gt;
+I.e set value to {myparam}=1
+&lt;p&gt;
+Will generate .subckt ... pyparam=1</description>
+<gates>
+<gate name="G$1" symbol="PARAM" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name="">
+<attribute name="SPICE_IGNORE" value="" constant="no"/>
 </technology>
 </technologies>
 </device>
