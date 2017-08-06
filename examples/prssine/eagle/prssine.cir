@@ -1,0 +1,52 @@
+PRS Sine Generator by Uros Platise
+
+* The prssine ngspice netlist was auto-generated on 06/08/2017 17:03
+* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim
+*
+
+
+* List of Ignored and Modified Components:
+*
+* - C1: SPICE_VALUE = {cval(fc,lval)}
+* - L1: SPICE_VALUE = {lval}
+* - R1: SPICE_VALUE = {2*zeta/sqrt(cval(fc,lval)/lval)}
+
+* Spice Initialization Directives from Sheet
+.func cval(fc,lval) {1/(lval*(6.28*fc)^2)}
+.param  lval =10mH
+.param  zeta =1.05
+.param  fc =1e3
+C1 lpfout 0 {cval(fc,lval)}
+L1 1 lpfout {lval}
+R1 lpfin 1 {2*zeta/sqrt(cval(fc,lval)/lval)}
+
+* Auto Generated Sources
+
+* Spice Control Directives from Sheet
+* Spice Initialization Directives from Sheet
+.include ../../../yosys/prim_cells_ngspice.mod
+
+.model DAC_BUF dac_bridge(out_low=0V out_high=1V out_undef=0.5V input_load=1pF t_rise=1ns t_fall=1ns)
+A1 [out][lpfin] DAC_BUF
+
+.model OSC d_osc(cntl_array=[0 5] freq_array=[1MEG 1MEG] duty_cycle=0.5 init_phase=0 rise_delay=1ns fall_delay=1ns)
+A2 0 clk OSC
+
+.model DFF d_dff (clk_delay=1ns set_delay=1ns reset_delay=1ns data_load=1pF clk_load=1pF set_load=1pF reset_load=1pF rise_delay=1ns fall_delay=1ns ic=0)
+A3 6 clk null null null rst DFF
+
+.model PUP d_pullup( load=1pF )
+A4 6 PUP
+
+.model DSOURCE8 d_source(input_file="../sine.ssv" input_load=1e-12)
+A5 [13 12 11 10 9 8 7 5] DSOURCE8
+
+* Processing module PRSGEN8 from sheet 2: 
+.include ../prsgen8_ngspice.mod
+Xprsgen8 clk rst 5 7 8 9 10 11 12 13 out PRSGEN8
+
+* Auto Generated Sources
+
+* Spice Control Directives from Sheet
+.tran 50ns 50ms uic
+.end
