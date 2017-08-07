@@ -88,7 +88,7 @@
 
 "Units of the L, C, R devices' values are in addition converted as follows:<ul>"
 "<li>if the last character is 'R' it is removed (as 200R -> 200)<br>"
-"<li>if the last character is 'M' then it is changed to Meg (as 2M -> 200Meg)<br>"
+"<li>if the last character is 'M' then it is changed to Meg (as 2M -> 2Meg)<br>"
 "<li>a small 'm' is left as it is to represent mili</ul>"
  
 "<h2>Auto-Generated Sources</h2>"
