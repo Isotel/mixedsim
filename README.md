@@ -1,4 +1,4 @@
-# Hardware Design Tool - Mixed Signal Simulation with Verilog
+# Hardware Design Tool - Mixed Signal & Domain Simulation
 
 Designing embedded applications typically involves analog and digital worlds, 
 from simple micro-controllers, more comprehensive micro-controllers featuring 
@@ -17,4 +17,4 @@ More info about the project: http://www.isotel.eu/mixedsim
 
 - Yosys Verilog synthesis library for ngspice, and ltspice
 
-- Examples
+- Mechatronis Example and visualization using Blender
