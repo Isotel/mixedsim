@@ -1,0 +1,61 @@
+2-Wheel Robot
+
+* The robot ngspice netlist was auto-generated on 22/08/2017 20:05
+* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim
+*
+
+
+* List of Ignored and Modified Components:
+*
+
+
+.model INT int(in_offset=0 gain=1 out_lower_limit=-1e12 out_upper_limit=1e12 limit_range=1e-6 out_ic=0)
+A1 fs ds INT
+
+.model SUM3 summer(in_offset=[0 0 0] in_gain=[1 1 1] out_gain=1 out_offset=0)
+A2 [f2 fts f1] fs SUM3
+
+.model LIMITER1 limit(in_offset=0 gain=10 out_lower_limit=-1 out_upper_limit=1 limit_range=1e-6 fraction=false)
+A3 v1 ft1 LIMITER1
+
+.model SUM_FT summer(in_offset=[0 0] in_gain=[1 1] out_gain=-1 out_offset=0)
+A4 [ft2 ft1] fts SUM_FT
+
+.model LIMITER2 limit(in_offset=0 gain=10 out_lower_limit=-1 out_upper_limit=1 limit_range=1e-6 fraction=false)
+A5 v2 ft2 LIMITER2
+A6 [ds dpr] v2 SUM_MT 
+
+.model SUM summer(in_offset=[0 0] in_gain=[1 1] out_gain=1 out_offset=0)
+A7 [ds dpr] v1 SUM
+
+.model SUM_MT summer(in_offset=[0 0] in_gain=[1 -1] out_gain=1 out_offset=0)
+A8 [ft2 ft1] ftp SUM_MT
+
+.model SUM_P summer(in_offset=[0 0 0] in_gain=[-1 1 1] out_gain=1 out_offset=0)
+A9 [f2 f1 ftp] fp SUM_P
+A10 fp dp INT
+
+.model gain_r gain(in_offset=0 gain=0.1_r out_offset=0)
+A11 dp dpr GAIN_R
+A12 2 x INT
+A13 3 y INT
+A14 dp p INT
+A15 ds s INT
+B1 2 0 V=V(DS)*cos(V(P))
+B2 3 0 V=V(DS)*sin(V(P))
+V3 f1 0 PULSE(0 5 1m 1ms 1ms 1s)
+V4 f2 0 PULSE(0 5 0.5 1ms 1ms 2s)
+
+* Auto Generated Sources
+
+* Spice Control Directives from Sheet
+.control
+set hcopydevtype=postscript
+set hcopyfont=Arimo
+set hcopypscolor=1
+set color0=rgb:f/f/f
+set color1=rgb:0/0/0
+tran 4ms 10s
+wrdata robot.ssv x y p
+.endc
+.end
