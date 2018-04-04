@@ -1,5 +1,5 @@
 #usage "<h1>Simulate Real Eagle Schematics with Mixed Signal ngSpice</h1>"
-        "Version 1.3, 6/8/2017, (c) 2012-2017 Uros Platise, http://www.isotel.eu/mixedsim\n"
+        "Version 1.4, 1/4/2018, (c) 2012-2018 Uros Platise, http://www.isotel.eu/mixedsim\n"
         "<p><ul>"
         "Run as: <b>run ngspice</b> [<i>name</i> [<i>sheet number</i> [<i>subckt pin name</i>]]]</ul><p>"
 "The ngspice, http://ngspice.org, is a mixed signal simulator "
@@ -31,6 +31,13 @@
 "<p>"
 "<b>ChangeLog</b><p>"
 "\n\n"
+"Version 1.4 1/4/2018<ul>"
+"<li>Added more conversions on R,L,C, to handle 3k3 to 3.3k or 4M7 to 4.7Meg"
+"<li>Additional in R,L,C that follows after the value are added as comments. Supported delimiters: - , / or space"
+"<li>PAD names are sorted to support named PADs, like A,B; whenever alpha characters appear, pad names are put in comment"
+"<li>GND is only renamed to net 0 in top-level circuit, and no longer for sub-circuits"
+"<li>SPICE_MODEL is made upr case to properly handle SPICE_MODEL=x case"
+"</ul>"
 "Version 1.3, 6/8/2017<ul>"
 "<li>Added external circuit instantiation via Eagle module and port elements"
 "<li>Control of parameters from top-level circuit"
@@ -76,7 +83,7 @@
 
 "<ul>"
 "<li>Net names N$<....> numbered by Eagle are converted as primitive numbers without N$ prefix"
-"<li>The net name GND, is converted to 0<br>"
+"<li>The net name GND, is converted to 0 only for top-level circuits, in sub-circuit mode remains GND<br>"
 "<li>Other exception to these rules are nets defined as +5V, -5V, +12V "
     "which are converted to +5V -> dcp5v, -5V -> dcn5v, dcp12v -> dcn12v when "
     "automatically generated DC supplies are enabled.<br>"
@@ -88,8 +95,10 @@
 
 "Units of the L, C, R devices' values are in addition converted as follows:<ul>"
 "<li>if the last character is 'R' it is removed (as 200R -> 200)<br>"
-"<li>if the last character is 'M' then it is changed to Meg (as 2M -> 2Meg)<br>"
-"<li>a small 'm' is left as it is to represent mili</ul>"
+"<li>if the last character is 'M' then it is changed to Meg (as 2M to 2Meg)<br>"
+"<li>a small 'm' is left as it is to represent mili<br>"
+"<li>forms with k and M are converted from like 3k3 to 3.3k and 4M7 to 4.7Meg<br>"
+"<li>additional comments in values delimited by , - / and space are provided in comments</ul>"
  
 "<h2>Auto-Generated Sources</h2>"
 
@@ -221,8 +230,9 @@
  *  - libXaw-devel 
  */
  
-string usedString[];       // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
+string usedString[];        // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
 int usedCount = 0;
+int subcktMode = 1;         // we assume we're in subkct mode to correctly generate the subckt header
 
 
 /**
@@ -269,13 +279,13 @@ string argv_outfile()
  *
  * by doing the following transformations
  *  - N$.... -> remove N$ prefix only and leave the net number as it is
- *  - GND -> 0
+ *  - GND -> 0 in top-level mode
  *  - +5V -> dcp5v
  *  - -5V -> dcn5v
  */
 string net2str(string name)
 {
-    if (name == "GND")
+    if (name == "GND" && !subcktMode)
         return "0";
         
     if (name[0] == '+')
@@ -300,9 +310,11 @@ string printNet(string partname, string pinname)
 {
     schematic(SCH) SCH.sheets(SH) SH.nets(N) N.segments(SEG) SEG.pinrefs(P)
     {
-        if (P.part.name == partname)
-            if (P.pin.contact.name == pinname)
-                return net2str(N.name);
+        if (P.part.name == partname) {
+            P.pin.contacts(C) {
+                if (C.name == pinname) return net2str(N.name);
+            }
+        }
     }
     return "null";
 }
@@ -402,7 +414,29 @@ string buildModel(UL_PART part)
         }
     }
     return model;
-} 
+}
+
+
+/**
+ * if first character is a number append up to four 0 at the front to align all possible
+ * pad names to 5 digits.
+ */
+string padded_name(string name)
+{
+    if (isdigit(name[0])) {
+        int i = strlen(name);
+        string newname = "";
+        for (; i<5; i++) newname += "0";
+        return newname + name;
+    }
+    return name;
+}
+
+string unpad_name(string name)
+{
+    while( name[0]=='0' ) name = strsub(name, 1);
+    return name;
+}
 
 
 /** 
@@ -415,6 +449,7 @@ void describePart(UL_PART part)
 {
     string name;
     string value;
+    string comment;
     
     /*
      * Check for valid part
@@ -434,7 +469,7 @@ void describePart(UL_PART part)
      * Add a correct spice prefix to a device name or auto-convert
      *  IC -> X
      */
-    if ( (name = getAttribute(part, "SPICE_DEVICE")) == "" )
+    if ( (name = strupr(getAttribute(part, "SPICE_DEVICE"))) == "" )
     {
         if (strsub(part.name, 0, 2) == "IC")
             name = "X";
@@ -523,9 +558,6 @@ void describePart(UL_PART part)
     /*
      * Describe part
      */
-
-    printf("%s ", name);    
-    
     int pins = 0;
     part.device.package.contacts( contact ) pins++;
 
@@ -541,24 +573,25 @@ void describePart(UL_PART part)
     int contact_valid;
     
     if (ports == "")
-    {        
-        for (int i=1; i <= pins; i++)
-        {
-            sprintf(contact, "%d", i);
-            
-            contact_valid = 0;
-            part.device.package.contacts( pad )
-            {
-                if (contact == pad.name)
-                    contact_valid = 1;
-            }
-            if (!contact_valid)
-            {
-                dlgMessageBox("Cannot find pin " + contact + " of part " + part.name );
-                exit( EXIT_FAILURE );
-            }            
-            
-            printf("%s ", printNet( part.name, contact ) );
+    {
+        string pads[];
+        int pads_count = 0;
+        part.device.package.contacts( pad ) {
+            pads[pads_count++] = padded_name( pad.name );
+        }
+        sort(pads_count, pads);
+        
+        string pad_name_order = "";
+        int number_of_named_pins = 0;
+        for (int j=0; j<pads_count; j++) {
+            if (!isdigit(pads[j][0])) number_of_named_pins++;
+            pad_name_order += unpad_name(pads[j]) + " ";
+        }
+        if (number_of_named_pins) printf("\n* PAD: %s\n", pad_name_order);
+        
+        printf("%s ", name);
+        for (j=0; j<pads_count; j++) {
+            printf("%s ", printNet( part.name, unpad_name(pads[j]) ) );
         }
     }
     else
@@ -566,6 +599,8 @@ void describePart(UL_PART part)
         string ports_pins[];
         int addspace = 0;
         int n = strsplit(ports_pins, ports, ' ');
+        
+        printf("%s ", name);
 
         for (int i=0; i < n; i++)
         {
@@ -585,8 +620,10 @@ void describePart(UL_PART part)
                 contact_valid = 0;
                 part.device.package.contacts( pad )
                 {
-                    if (ports_pins[i] == pad.name)
+                    if (ports_pins[i] == pad.name) {
                         contact_valid = 1;
+                        break;
+                    }
                 }
                 if (!contact_valid)
                 {
@@ -601,6 +638,32 @@ void describePart(UL_PART part)
             }
         }
         printf(" ");
+    }
+    
+    /*
+     * Moves extra notes in values to comments as: 4k7-10V or 4.7k 10V or 4.7k/10V
+     * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M
+     */
+    if (name[0] == 'R' || name[0] == 'C' || name[0] == 'L')
+    {
+        int i;        
+        if ( (i = strchr(value, ' ')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
+        if ( (i = strchr(value, '-')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
+        if ( (i = strchr(value, '/')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
+        if ( (i = strchr(value, ',')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
+        
+        if ( (i = strchr(value, 'k')) > 0) {
+            if (isdigit(value[i+1])) {
+                value[i] = '.';
+                value += "k";
+            }
+        }
+        if ( (i = strchr(value, 'M')) > 0) {
+            if (isdigit(value[i+1])) {
+                value[i] = '.';
+                value += "M";
+            }
+        }
     }
         
     /*
@@ -617,14 +680,14 @@ void describePart(UL_PART part)
     if (name[0] == 'R' || name[0] == 'C' || name[0] == 'L')
     {
         int last_i = strlen(value)-1;
-        if (value[ last_i ] == 'M') // small 'm' means mili
-        {        
-            value[ ++last_i ] = 'e';
-            value[ ++last_i ] = 'g';
-        }
+        if (value[ last_i ] == 'M') value += "eg" ;// small 'm' means mili
     }
     
-    printf("%s\n", withoutDefaultValue( value ) );
+    printf("%s", withoutDefaultValue( value ) );
+    if (comment != "")
+        printf(" $ %s\n", comment);
+    else
+        printf("\n");
     
     /*
      * Add custom output
@@ -931,6 +994,16 @@ string getTitleAuthors()
 }
 
 
+int ignoreMsgShown = 0;
+
+void showIgnoredMsg() {
+    if (ignoreMsgShown == 0) {
+        printf( "* List of Ignored and Modified Components:\n*\n");
+        ignoreMsgShown = 1;
+    }
+}
+
+
 /** 
  * Schematics Main generates a mixed-signal ngspice top-level (.cir) or sub-circuit (.mod) file.
  */
@@ -939,7 +1012,9 @@ schematic(sch)
     string designname    = argv_outfile();
     string subckt_header = generateSubcircuit( designname );
     string outfilename;
-    
+        
+    subcktMode = (subckt_header == "") ? 0 : 1;
+        
     if (designname != "")
         outfilename = filesetext(designname, subckt_header == "" ? ".cir" : ".mod");
     else
@@ -951,20 +1026,21 @@ schematic(sch)
         printf("* The %s ngspice netlist was auto-generated on %s\n", getSubcircuitModelName(sch.name), t2string( time() ));
         printf("* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim\n*\n%s\n\n", subckt_header);
                 
-        printf( "* List of Ignored and Modified Components:\n*\n");
         sch.sheets(sht) {
             if ( !is_sheetselected(sht.number) ) continue;
             sht.parts(part) {
                 if ( getAttribute(part, "SPICE_IGNORE") != "" && part.device.name != "SPICE-PARAM" ) {
+                    showIgnoredMsg();
                     printf("* - %s: SPICE_IGNORE\n", part.name);
                 }            
                 string val;
                 if ( (val=getAttribute(part, "SPICE_VALUE")) != "" ) {
+                    showIgnoredMsg();
                     printf("* - %s: SPICE_VALUE = %s\n", part.name, val);
                 }
             }
-        }        
-        printf("\n");
+        }
+        if (ignoreMsgShown) printf("\n");
         
         sch.sheets(sht) {
             if ( !is_sheetselected(sht.number) ) continue;
@@ -1053,12 +1129,13 @@ schematic(sch)
         if ( subckt_header == "" )
         {
             printf(".end\n");
-            dlgMessageBox(";Successfully generated top-level simulation to:\n" + outfilename);
+            status("Successfully generated top-level simulation to: " + outfilename);
+            
         }
         else
         {
             printf(".ends\n");
-            dlgMessageBox(";Successfully generated sub-circuit to:\n" + outfilename);
+            status("Successfully generated sub-circuit to: " + outfilename);
         }
     }
 }

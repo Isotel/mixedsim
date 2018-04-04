@@ -1,0 +1,30 @@
+Test Bench for Motor Force Controller by Uros Platise
+
+* The motor_tb ngspice netlist was auto-generated on 02/04/2018 15:06
+* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim
+*
+
+
+
+.model INT int(in_offset=0 gain=1 out_lower_limit=-1e12 out_upper_limit=1e12 limit_range=1e-6 out_ic=0)
+A1 w phi INT
+
+.include dcmotor.mod
+
+* PAD: A B W 
+XM1 a b w dcmotor
+R1 vcc sup 0.1 
+V1 sup 0 DC(0) PULSE(0 5 0 10us 10us 1)
+
+* Processing module MF1 from sheet 1: 
+.include motorforce.mod
+Xmf1 a b vcc 0 MOTORFORCE
+
+* Auto Generated Sources
+
+* Spice Control Directives from Sheet
+.control
+tran 100ns 10ms uic
+rusage trantime traniter
+.endc
+.end

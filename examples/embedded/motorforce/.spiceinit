@@ -1,0 +1,2 @@
+set sourcepath = ( . models ../../.. )
+set num_threads = 4
