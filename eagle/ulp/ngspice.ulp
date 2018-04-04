@@ -97,7 +97,7 @@
 "<li>if the last character is 'R' it is removed (as 200R -> 200)<br>"
 "<li>if the last character is 'M' then it is changed to Meg (as 2M to 2Meg)<br>"
 "<li>a small 'm' is left as it is to represent mili<br>"
-"<li>forms with k and M are converted from like 3k3 to 3.3k and 4M7 to 4.7Meg<br>"
+"<li>forms with k, M and R are converted from like 3k3 to 3.3k, 4M7 to 4.7Meg, 27R2 to 27.2<br>"
 "<li>additional comments in values delimited by , - / and space are provided in comments</ul>"
  
 "<h2>Auto-Generated Sources</h2>"
@@ -642,7 +642,7 @@ void describePart(UL_PART part)
     
     /*
      * Moves extra notes in values to comments as: 4k7-10V or 4.7k 10V or 4.7k/10V
-     * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M
+     * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M, 27R2 -> 27.2
      */
     if (name[0] == 'R' || name[0] == 'C' || name[0] == 'L')
     {
@@ -662,6 +662,11 @@ void describePart(UL_PART part)
             if (isdigit(value[i+1])) {
                 value[i] = '.';
                 value += "M";
+            }
+        }
+        if ( (i = strchr(value, 'R')) > 0) {
+            if (isdigit(value[i+1])) {
+                value[i] = '.';
             }
         }
     }
