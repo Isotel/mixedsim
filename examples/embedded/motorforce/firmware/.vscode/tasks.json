@@ -4,11 +4,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build FIR",
+            "label": "Build MotorForce",
             "type": "shell",
             "command": "gcc",
             "args": [
-                "-o fir", "-g", "fir.c"
+                "-Wall", "-o motorforce_ngut", "-g", "motorforce_ngut.c", "motorforce_controller.c"
             ],
             "group": {
                 "kind": "build",

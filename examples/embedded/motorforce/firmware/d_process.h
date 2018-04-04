@@ -1,3 +1,9 @@
+/**
+ * \file
+ * \brief NgSpice D_PROCESS Interface
+ * \author Uros Platise <uros@isotel.eu>
+ */
+
 #ifndef __NGSPICE_D_PROCESS__
 #define __NGSPICE_D_PROCESS__
 
