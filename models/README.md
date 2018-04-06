@@ -10,8 +10,8 @@ To use the library in your projects simply set the environment variable:
   export NGSPICE_INPUT_DIR=<pointing to this directory>
 ```
   
-Or append this path (as relative) to the .spiceinit as in the motorforce 
-example:
+Or append this path (as relative or absolute without trailing /) to the 
+.spiceinit as in the motorforce example:
 
 ```
   set sourcepath = ( . models ../../../models )

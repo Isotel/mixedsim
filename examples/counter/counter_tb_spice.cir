@@ -9,7 +9,7 @@ Vdd Vdd 0 DC 3
 .MODEL cmosp PMOS LEVEL=1 VT0=-0.7 KP=50U GAMMA=0.57 LAMBDA=0.05 PHI=0.8
 
 * load design and library
-.include ../../yosys/prim_cells_cmos.mod
+.include yosys/prim_cells_cmos.mod
 .include counter_spice.mod
 
 * input signals

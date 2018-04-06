@@ -1,6 +1,6 @@
 
 * load design and library
-.include ../../yosys/prim_cells_ngspice.mod
+.include yosys/prim_cells_ngspice.mod
 .include counter_ngspice.mod
 
 * input signals
