@@ -1,0 +1,17 @@
+Simple Syntactic & Semantic Checks to Verify TI Models
+
+* It's a draft idea
+* Tests need to be further equipped with tcl script for automated verication.
+*
+* <uros@isotel.eu>
+
+V15p p15 0 PULSE(0 15 0 10us 10us 1)
+V15n n15 0 PULSE(0 -15 0 10us 10us 1)
+
+.include INA138/INA138.mod
+Xina138 p15 shunt p15 0 ina_out INA138
+Rshunt p15 shunt 1R
+Rload  shunt 0 100R
+Rout ina_out 0 5k
+
+.end

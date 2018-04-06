@@ -1,0 +1,91 @@
+*version 8.0 195899477
+@index
+symloc INA138 0 1407
+*symbol INA138
+d Current Shunt Monitor 2.7 to 36V
+@type p 8.0
+@attributes
+a 0 sp 9 0 0 0 hln 100 REFDES=U?
+a 0 sp 11 0 12 127 hln 100 PART=INA138
+a 0 sp 0 0 0 0 hln 100 MODEL=INA138
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@REFDES %+ %- %Vs %GND %OUT @MODEL
+@pins
+p 2 12 52 hln 100 Vs n 0 50 h
+a 0 s 1 0 9 48 hrn 100 PIN=5
+a 0 s 0:13 0 0 50 hln 100 ERC=p
+a 0 s 0:13 0 0 50 hln 100 FLOAT=e
+p 2 38 148 hrn 100 GND n 40 160 v
+a 0 s 1 0 34 150 ulb 100 PIN=2
+a 0 s 0:13 0 40 160 hln 100 ERC=p
+a 0 s 0:13 0 40 160 hln 100 FLOAT=e
+p 2 129 144 hrn 100 OUT n 140 130 u
+a 0 s 1 0 130 130 hlb 100 PIN=1
+a 0 s 0:13 0 140 130 hln 100 ERC=o
+a 0 s 0:13 0 140 130 hln 100 FLOAT=r
+p 2 40 19 hln 100 + n 50 0 d
+a 0 s 1 0 40 -2 urb 100 PIN=3
+a 0 s 0:13 0 50 0 hln 100 ERC=i
+a 0 s 0:13 0 50 0 hln 100 FLOAT=e
+p 2 84 18 hln 100 - n 80 0 d
+a 0 s 1 0 84 0 urb 100 PIN=4
+a 0 s 0:13 0 80 0 hln 100 ERC=i
+a 0 s 0:13 0 80 0 hln 100 FLOAT=e
+@graphics 140 160 0 50 10
+r 0 10 10 130 150
+v 0 39 60
+90 60
+65 109
+39 60
+;
+r 0 42 20 57 45
+z 26 54 38 vln 100 2
+5k
+v 0 50 45
+50 60
+;
+v 0 50 10
+50 20
+;
+r 0 73 20 88 45
+z 26 86 38 vln 100 2
+5k
+v 0 81 45
+81 60
+;
+v 0 80 10
+80 20
+;
+z 26 86 38 vln 100 2
+5k
+v 0 65 109
+65 115
+90 115
+90 105
+;
+v 0 90 115
+90 125
+;
+v 0 90 110
+100 105
+100 52
+50 52
+;
+v 0 90 119
+100 125
+100 131
+;
+v 0 100 125
+94 124
+;
+v 0 100 125
+97 120
+;
+v 0 100 130
+130 130
+;
+z 26 46 70 hln 100 1
++
+z 26 80 70 hln 100 1
+-
+z 26 47 53 hln 200 1
+.

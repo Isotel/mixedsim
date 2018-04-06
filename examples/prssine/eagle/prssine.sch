@@ -7997,7 +7997,7 @@ particular prevents nuisance errors on the part of the simulator).</description>
 </sheet>
 <sheet>
 <plain>
-<text x="81.28" y="-15.24" size="1.778" layer="100">.include ../../../yosys/prim_cells_ngspice.mod</text>
+<text x="81.28" y="-15.24" size="1.778" layer="100">.include yosys/prim_cells_ngspice.mod</text>
 <text x="81.28" y="-20.32" size="1.778" layer="110">.tran 50ns 50ms uic</text>
 </plain>
 <moduleinsts>

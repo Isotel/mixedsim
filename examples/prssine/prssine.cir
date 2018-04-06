@@ -1,6 +1,6 @@
 * Mixed Signal Simulation Demo Project - Digital Sine Generator with 8-bit PRS and a Low-Pass Filter, <uros@isotel.eu>
 
-.include ../../yosys/prim_cells_ngspice.mod
+.include yosys/prim_cells_ngspice.mod
 .include prsgen8_ngspice.mod
 .include lpf.mod
 

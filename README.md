@@ -16,3 +16,10 @@ More info about the project: http://www.isotel.eu/mixedsim
 - Mechatronis Example and visualization using Blender
 
 - NgSpice Simulator as a Development Framework for Algorithm & Embedded Firmware Developers
+
+## Motivation: Standard ngSpice Model Library
+
+Motivation has started to collect, modify, repair and verify freely available spice models
+into a common library.
+
+Got interested to join, just open a case on github or [contact me directly](mailto:uros@isotel.eu)

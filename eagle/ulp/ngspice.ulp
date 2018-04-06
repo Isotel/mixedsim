@@ -1,5 +1,5 @@
 #usage "<h1>Simulate Real Eagle Schematics with Mixed Signal ngSpice</h1>"
-        "Version 1.4, 1/4/2018, (c) 2012-2018 Uros Platise, http://www.isotel.eu/mixedsim\n"
+        "Version 1.4.1, 6/4/2018, (c) 2012-2018 Uros Platise, http://www.isotel.eu/mixedsim\n"
         "<p><ul>"
         "Run as: <b>run ngspice</b> [<i>name</i> [<i>sheet number</i> [<i>subckt pin name</i>]]]</ul><p>"
 "The ngspice, http://ngspice.org, is a mixed signal simulator "
@@ -31,7 +31,7 @@
 "<p>"
 "<b>ChangeLog</b><p>"
 "\n\n"
-"Version 1.4 1/4/2018<ul>"
+"Version 1.4.1 6/4/2018<ul>"
 "<li>Added more conversions on R,L,C, to handle 3k3 to 3.3k or 4M7 to 4.7Meg"
 "<li>Additional in R,L,C that follows after the value are added as comments. Supported delimiters: - , / or space"
 "<li>PAD names are sorted to support named PADs, like A,B; whenever alpha characters appear, pad names are put in comment"
@@ -642,9 +642,10 @@ void describePart(UL_PART part)
     
     /*
      * Moves extra notes in values to comments as: 4k7-10V or 4.7k 10V or 4.7k/10V
-     * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M, 27R2 -> 27.2
+     * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M, 27R2 -> 27.2 only if
+     * first character of the value is numeric
      */
-    if (name[0] == 'R' || name[0] == 'C' || name[0] == 'L')
+    if ( (name[0] == 'R' || name[0] == 'C' || name[0] == 'L') && isdigit(value[0]) )
     {
         int i;        
         if ( (i = strchr(value, ' ')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}

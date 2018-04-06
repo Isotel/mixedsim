@@ -1,6 +1,6 @@
 PRS Sine Generator by Uros Platise
 
-* The prssine ngspice netlist was auto-generated on 06/08/2017 17:03
+* The prssine ngspice netlist was auto-generated on 06/04/2018 07:17
 * with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim
 *
 
@@ -24,7 +24,7 @@ R1 lpfin 1 {2*zeta/sqrt(cval(fc,lval)/lval)}
 
 * Spice Control Directives from Sheet
 * Spice Initialization Directives from Sheet
-.include ../../../yosys/prim_cells_ngspice.mod
+.include yosys/prim_cells_ngspice.mod
 
 .model DAC_BUF dac_bridge(out_low=0V out_high=1V out_undef=0.5V input_load=1pF t_rise=1ns t_fall=1ns)
 A1 [out][lpfin] DAC_BUF
