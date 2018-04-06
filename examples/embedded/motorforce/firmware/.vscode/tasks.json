@@ -8,7 +8,7 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "-Wall", "-o motorforce_ngut", "-g", "motorforce_ngut.c", "motorforce_controller.c"
+                "-Wall", "-o motorforce_ngut", "-g", "motorforce_ngut.c", "motorforce_controller.c", "-I../../../../include"
             ],
             "group": {
                 "kind": "build",

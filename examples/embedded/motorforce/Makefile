@@ -11,7 +11,7 @@ psoc5/pwm.mod: psoc5/pwm.ys psoc5/pwm.v
 	cd psoc5; yosys pwm.ys
 
 firmware/motorforce_ngut: firmware/motorforce_ngut.c firmware/motorforce_controller.c
-	cd firmware; gcc -g -Wall -o motorforce_ngut motorforce_ngut.c motorforce_controller.c
+	cd firmware; gcc -g -Wall -o motorforce_ngut motorforce_ngut.c motorforce_controller.c -I../../../../include
 
 tran: all
 	ngspice motor_tb.cir
