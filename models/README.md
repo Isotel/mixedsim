@@ -18,8 +18,8 @@ example:
 ```
 
 Note that NGSPICE_INPUT_DIR is appended to your's or default's sourcepath.
-To add multiple directory to the NGSPICE_INPUT_DIR write it in brackets
-and separate with spaces, like:
+To add multiple directory to the NGSPICE_INPUT_DIR list it within double 
+quotes and separate with spaces, like this:
 
 ```
   export NGSPICE_INPUT_DIR=".. mylib ../someotherlib"
