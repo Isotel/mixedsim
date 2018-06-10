@@ -1,10 +1,10 @@
 read_verilog pwm.v
-read_verilog -lib ../../../../yosys/prim_cells.v
+read_verilog -lib ../../../../models/yosys/prim_cells.v
 
 proc;; memory;; techmap;;
 
-dfflibmap -liberty ../../../../yosys/prim_cells.lib
-abc -liberty ../../../../yosys/prim_cells.lib;;
+dfflibmap -liberty ../../../../models/yosys/prim_cells.lib
+abc -liberty ../../../../models/yosys/prim_cells.lib;;
 
 write_spice -neg d_low -pos d_high pwm.mod
 
