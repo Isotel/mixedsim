@@ -1,5 +1,5 @@
 #usage "<h1>Simulate Real Eagle Schematics with Mixed Signal ngSpice</h1>"
-        "Version 1.4.1, 6/4/2018, (c) 2012-2018 Uros Platise, http://www.isotel.eu/mixedsim\n"
+        "Version 1.5, 22/12/2018, (c) 2012-2018 Uros Platise, http://www.isotel.eu/mixedsim\n"
         "<p><ul>"
         "Run as: <b>run ngspice</b> [<i>name</i> [<i>sheet number</i> [<i>subckt pin name</i>]]]</ul><p>"
 "The ngspice, http://ngspice.org, is a mixed signal simulator "
@@ -31,6 +31,10 @@
 "<p>"
 "<b>ChangeLog</b><p>"
 "\n\n"
+"Version 1.5 22/12/2018<ul>"
+"<li>Value is parsed like: 5k-5%-50V or 10uF-50V and adds ngspice gauss and voltage limit specs."
+"<li>Support for devices with gates spread across sheets."
+"</ul>"
 "Version 1.4.1 6/4/2018<ul>"
 "<li>Added more conversions on R,L,C, to handle 3k3 to 3.3k or 4M7 to 4.7Meg"
 "<li>Additional in R,L,C that follows after the value are added as comments. Supported delimiters: - , / or space"
@@ -99,6 +103,13 @@
 "<li>a small 'm' is left as it is to represent mili<br>"
 "<li>forms with k, M and R are converted from like 3k3 to 3.3k, 4M7 to 4.7Meg, 27R2 to 27.2<br>"
 "<li>additional comments in values delimited by , - / and space are provided in comments</ul>"
+
+"<h2>Tolerance and Voltage Specifiers</h2>"
+
+"Value may provide tolerance and max voltage specifiers of the form value-tol%-maxV as for example for resistor: 1k-5%-10V or capacitor: 1uF-10%-50V, or just 1uF-50V<ul>"
+"<li>The tol% specifier is used as actual value compensated by a gaussian distribution of 3 sigma. Note that each time circuit is sourced (started) the component values with tolerance given are different.<br>"
+"<li>The maxV specifier adds max voltage settings which together with .option warn=1 generates warnings.</ul>"
+"To ignore these additional specifiers you may use a different delimiter as 1uF/50V or use SPICE_VALUE to override the default value."
  
 "<h2>Auto-Generated Sources</h2>"
 
@@ -230,10 +241,13 @@
  *  - libXaw-devel 
  */
  
-string usedString[];        // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
-int usedCount = 0;
 int subcktMode = 1;         // we assume we're in subkct mode to correctly generate the subckt header
 
+string usedString[];        // memorize includes not to double them, and also memorize libs here, basically it could be for anything...
+int usedCount = 0;
+
+string partsDone[];         // memorize which parts have been described already and avoid duplicates that may appear when gates are spread across the sheets
+int partsCount = 0;
 
 /**
  * Select pins for subcircit by name
@@ -460,6 +474,22 @@ void describePart(UL_PART part)
         return;
     if ( !part.device.package )
         return;
+
+
+    /*
+     * Check if part has been described already
+     */
+    int index;            
+    if ( lookup( partsDone, part.name, index ) == "" ) {
+        partsDone[ partsCount++ ] = part.name;
+    }
+    else {
+        return;
+    }
+
+    /*
+     * Check if part has a valid value
+     */
     if ( strlen(part.value) == 0 ) {
         dlgMessageBox("Part " + part.name + " has no value given and is ignored.\n\nHowever rather set it's value to Open or use SPICE_IGNORE attribute to ignore it.\n");
         return;
@@ -640,6 +670,7 @@ void describePart(UL_PART part)
         printf(" ");
     }
     
+    int parse_comment_for_specs = 0;
     /*
      * Moves extra notes in values to comments as: 4k7-10V or 4.7k 10V or 4.7k/10V
      * Transform kilo and mega: 2k2 -> 2.2k, 4M7 -> 4.7M, 27R2 -> 27.2 only if
@@ -649,7 +680,7 @@ void describePart(UL_PART part)
     {
         int i;        
         if ( (i = strchr(value, ' ')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
-        if ( (i = strchr(value, '-')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
+        if ( (i = strchr(value, '-')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i); parse_comment_for_specs=1;}
         if ( (i = strchr(value, '/')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
         if ( (i = strchr(value, ',')) > 0) {comment = strsub(value, i+1); value = strsub(value, 0, i);}
         
@@ -689,7 +720,42 @@ void describePart(UL_PART part)
         if (value[ last_i ] == 'M') value += "eg" ;// small 'm' means mili
     }
     
-    printf("%s", withoutDefaultValue( value ) );
+    /*
+     * Process 10%-100V
+     * by finding % for tolerance and V for voltage
+     */
+    string voltage = "", tolerance = "";
+    if (parse_comment_for_specs) {
+        string cmpspec[];
+        int j, cmpspecn = strsplit(cmpspec, comment, '-');
+        for (j=0; j<cmpspecn; j++) {
+            if (strlen(cmpspec[j])>0) {
+                switch(cmpspec[j][strlen(cmpspec[j])-1]) {
+                case '%': 
+                    tolerance = cmpspec[j];
+                    tolerance[strlen(tolerance)-1]=0;
+                    break;
+                case 'V':
+                    voltage = cmpspec[j];
+                    break;
+                }   
+            }
+        }
+    }
+    
+    /*
+     * Bind value, with tolerance and voltage specs together
+     */
+    
+    if (tolerance != "") {
+        printf("{gauss(%s, %se-2, 3)}", withoutDefaultValue( value ), tolerance);
+    }
+    else {
+        printf("%s", withoutDefaultValue( value ));
+    }
+    if (voltage != "") {
+        printf(" Bv_max=%s", voltage);
+    }
     if (comment != "")
         printf(" $ %s\n", comment);
     else
@@ -1030,7 +1096,7 @@ schematic(sch)
     {
         printf("%s%s\n", subckt_header == "" ? "" : "* ", getTitleAuthors() );
         printf("* The %s ngspice netlist was auto-generated on %s\n", getSubcircuitModelName(sch.name), t2string( time() ));
-        printf("* with ngspice.ulp V1.3 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim\n*\n%s\n\n", subckt_header);
+        printf("* with ngspice.ulp V1.5 for Eagle 6.5.0 - 7.7 by Uros Platise, http://www.isotel.eu/mixedsim\n*\n%s\n\n", subckt_header);
                 
         sch.sheets(sht) {
             if ( !is_sheetselected(sht.number) ) continue;
