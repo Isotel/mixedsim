@@ -183,7 +183,7 @@
 "<li><b>SPICE_VALUE   = ... </b> replaces original value. This new value is also used in "
 "auto-includes for sub-circuits. SPICE_INCLUDE however overrides all.<br>"
 "If the first character begins with + then the content of the SPICE_VALUE is appended to"
-"the existing value, which is useful for adding spice specifics parameters.<br>"
+"the existing value, which is useful for adding spice specifics parameters. If string contains >VALUE it is replaced by part's value<br>"
 
 "<li><b>SPICE_MODEL   = ... </b> provides a model. When this attribute is set, auto include will be disabled "
 "unless SPICE_INCLUDE is given. This attribute can be used even to describe a complete sub-circuits. "
@@ -509,10 +509,17 @@ void describePart(UL_PART part)
     /*
      * Replace or append (when starting with +) the value
      */      
-    if ( (value = getAttribute(part, "SPICE_VALUE")) == "" )
+    if ( (value = getAttribute(part, "SPICE_VALUE")) == "" ) {
         value = part.value;
+    }
     else
     {
+        /* Check and replace >VALUE .. */
+        int value_idx = strstr(value, ">VALUE", 0);
+        if (value_idx > 0) {
+            value = strsub(value, 0, value_idx) + part.value + strsub(value, value_idx+6);
+        }
+
         if (value[0] == '+')
         {
             value[0] = ' ';
