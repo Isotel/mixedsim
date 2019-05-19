@@ -151,7 +151,7 @@ class spice_plot(object):
         """
         if type(n)==str:
             for v in self.data_vectors:
-                if v.name in n:
+                if n == v.name:
                     return v
             return None
 
@@ -265,11 +265,11 @@ class ngspice_read(object):
                         i = 0
                         a = numpy.zeros(self.npoints*self.nvars, dtype="float64")
                         while (i < self.npoints*self.nvars):
-                            t = string.split(f.readline(),"\t")
+                            t = str( f.readline().decode("utf-8") ).split('\t')
                             if len(t) < 2:
                                 continue
                             else:
-                                a[i] = string.atof(t[1])
+                                a[i] = float(t[1])
                             i += 1
                     else: ## keyword = "binary"
                         a = numpy.frombuffer(f.read(self.nvars*self.npoints*8),
@@ -286,14 +286,14 @@ class ngspice_read(object):
                         i = 0
                         a = numpy.zeros(self.npoints*self.nvars*2, dtype="float64")
                         while (i < self.npoints*self.nvars*2):
-                            t = string.split(f.readline(),"\t")
+                            t = str( f.readline().decode("utf-8") ).split('\t')
                             if len(t) < 2:  ## empty lines
                                 continue
                             else:
-                                t = string.split(t[1],",")
-                                a[i] = string.atof(t[0])
+                                t = t[1].split(",")
+                                a[i] = float(t[0])
                                 i += 1
-                                a[i] = string.atof(t[1])
+                                a[i] = float(t[1])
                                 i += 1
                     else: ## keyword = "binary"
                         a = numpy.frombuffer(f.read(self.nvars*self.npoints*8*2),
@@ -310,7 +310,7 @@ class ngspice_read(object):
                 self.plots.append(self.current_plot)
                 self.set_default_values()
 
-            elif string.strip(keyword) == "": ## ignore empty lines
+            elif str.strip(keyword) == "": ## ignore empty lines
                 continue
 
             else:
