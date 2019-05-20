@@ -25,21 +25,20 @@ else:
     
 plot = ngspice_read.ngspice_read(filename).get_plots()[0]
 
-print('* IC conditions extracted from the %s at end time: %f s, by http://isotel.eu/mixedsim' % (filename, plot.get_scalevector().get_data()[-1]) )
+print('* Voltages extracted from the %s at end time: %f s, by http://isotel.eu/mixedsim' % (filename, plot.get_scalevector().get_data()[-1]) )
 
 ignored_nets = []
 
 for vec in plot.list_datavectors():
     if re.match(search, vec):        
-        if '+' not in vec and '-' not in vec:
-            if 'I(' in vec or 'V(' in vec:  # LTspice format
-                print('.ic %s=%f' % (vec, plot.get_datavector(vec).get_data()[-1]))
-            elif 'i(' not in vec:           # ngspice format, does not support currents yet
-                print('.ic v(%s)=%f' % (vec, plot.get_datavector(vec).get_data()[-1]))
+        if 'i(' not in str.lower(vec):
+            if '+' not in vec and '-' not in vec:
+                if 'V(' in vec: # LTspice format
+                    print('.ic %s=%f' % (vec, plot.get_datavector(vec).get_data()[-1]))
+                else:           # ngspice format
+                    print('.ic v(%s)=%f' % (vec, plot.get_datavector(vec).get_data()[-1]))
             else:
                 ignored_nets.append(vec)
-        else:
-            ignored_nets.append(vec)
 
 if len(ignored_nets):
     eprint('Warning: the following nodes were excluded:')

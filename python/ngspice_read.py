@@ -24,9 +24,14 @@
 #   by node name
 # - Added support for LTspice ASCII format and Offset keyword
 
+from __future__ import print_function
 import numpy
 import string
 import sys
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 
 class spice_vector(object):
     """
@@ -52,9 +57,9 @@ class spice_vector(object):
                 if type(getattr(self,k)) == type(v):
                     setattr(self,k,v)
                 else:
-                    print("Warning: attribute has wrong type: {} ignored!".format(type(v)))
+                    eprint("Warning: attribute has wrong type: {} ignored!".format(type(v)))
             else:
-                print("Warning: unknown attribute" + k + " Ignored!")
+                eprint("Warning: unknown attribute" + k + " Ignored!")
                     
     def set_data(self, data_array):
         """
@@ -111,10 +116,10 @@ class spice_plot(object):
                 if type(getattr(self,k)) == type(v):
                     setattr(self,k,v)
                 else:
-                    print("Warning: attribute has wrong type: " \
+                    eprint("Warning: attribute has wrong type: " \
                           + type(v) + " ignored!")
             else:
-                print("Warning: unknown attribute \"" + k + "\". Ignored!")
+                eprint("Warning: unknown attribute \"" + k + "\". Ignored!")
 
     def set_scalevector(self, spice_vector):
         """
@@ -180,7 +185,7 @@ class ngspice_read(object):
         error = self.readfile(filename)
         if error:
             ## FIXME create an assertion
-            print("error in reading the file")
+            eprint("error in reading the file")
 
     def set_default_values(self):
         ## Set the default values for some options
@@ -224,28 +229,28 @@ class ngspice_read(object):
                     elif flag == "padded":
                         self.padded = True
                     else:
-                        print('Warning: unknown flag: "' + flag + '"')
+                        eprint('Warning: unknown flag: "' + flag + '"')
             elif keyword == "no. variables":
                 self.nvars = int(tok[1])
             elif keyword == "no. points":
                 self.npoints = int(tok[1])
             elif keyword == "dimensions":
                 if self.npoints == 0:
-                    print('Error: misplaced "Dimensions:" lineprint')
+                    eprint('Error: misplaced "Dimensions:" lineprint')
                     continue
-                print('Warning: "Dimensions" not supported yet')
+                eprint('Warning: "Dimensions" not supported yet')
                 # FIXME: How can I create such simulation files?
                 # numdims = string.atoi(tok[1])
             elif keyword == "offset":
                 t_offset = float(tok[1])
-                print('Recordings start at', t_offset, 's')
+                eprint('Recordings start at', t_offset, 's')
             elif keyword == "command":
-                print('Warning: "command" option not implemented yet')
-                print('\t' + line)
+                eprint('Warning: "command" option not implemented yet')
+                eprint('\t' + line)
                 # FIXME: what is this command good for
             elif keyword == "option":
-                print('Warning: "command" option not implemented yet')
-                print('\t' + line)
+                eprint('Warning: "command" option not implemented yet')
+                eprint('\t' + line)
                 # FIXME: what is this command good for
             elif keyword == "variables":
                 for i in range(self.nvars):
@@ -256,12 +261,12 @@ class ngspice_read(object):
                                                    type=line[2].decode("utf-8"))
                         self.vectors.append(curr_vector)
                         if len(line) > 3:
-                            # print("Attributes: ", line[3:])
+                            # eprint("Attributes: ", line[3:])
                             dummy =1
                             ## min=, max, color, grid, plot, dim
                             ## I think only dim is useful and neccesary
                     else:
-                        print("list of variables is to short")
+                        eprint("list of variables is to short")
 
             elif keyword in ["values","binary"]:
                 # read the data
@@ -320,7 +325,7 @@ class ngspice_read(object):
                 continue
 
             else:
-                print('Unsupported line in the rawfile:\n\t"'  \
+                eprint('Unsupported line in the rawfile:\n\t"'  \
                       +line + '"\n')
                 #return 0
 
