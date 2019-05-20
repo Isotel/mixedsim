@@ -22,6 +22,7 @@
 # - Added list_datavectors() to return node names
 # - Added search by name to get_datavector(self,n) to be able to retrieve
 #   by node name
+# - Added support for LTspice ASCII format and Offset keyword
 
 import numpy
 import string
@@ -193,6 +194,7 @@ class ngspice_read(object):
 
     def readfile(self,filename):
         f = open(filename, "rb")
+        t_offset = 0.0
         #with open(filename, "rb") as infile:
         #ab = f.read()
         #inf = ab.decode('ISO-8859-1')
@@ -222,7 +224,7 @@ class ngspice_read(object):
                     elif flag == "padded":
                         self.padded = True
                     else:
-                        print('Warning: unknown flag: "' + f + '"')
+                        print('Warning: unknown flag: "' + flag + '"')
             elif keyword == "no. variables":
                 self.nvars = int(tok[1])
             elif keyword == "no. points":
@@ -234,6 +236,9 @@ class ngspice_read(object):
                 print('Warning: "Dimensions" not supported yet')
                 # FIXME: How can I create such simulation files?
                 # numdims = string.atoi(tok[1])
+            elif keyword == "offset":
+                t_offset = float(tok[1])
+                print('Recordings start at', t_offset, 's')
             elif keyword == "command":
                 print('Warning: "command" option not implemented yet')
                 print('\t' + line)
@@ -269,13 +274,14 @@ class ngspice_read(object):
                             if len(t) < 2:
                                 continue
                             else:
-                                a[i] = float(t[1])
+                                a[i] = float(t[-1])
                             i += 1
                     else: ## keyword = "binary"
                         a = numpy.frombuffer(f.read(self.nvars*self.npoints*8),
                                              dtype="float64")
+                                             
                     aa = a.reshape(self.npoints,self.nvars)
-                    self.vectors[0].set_data(aa[:,0])
+                    self.vectors[0].set_data(aa[:,0] + t_offset)
                     self.current_plot.set_scalevector(self.vectors[0])
                     for n in range(1,self.nvars):
                         self.vectors[n].set_data(aa[:,n])
@@ -290,7 +296,7 @@ class ngspice_read(object):
                             if len(t) < 2:  ## empty lines
                                 continue
                             else:
-                                t = t[1].split(",")
+                                t = t[-1].split(",")
                                 a[i] = float(t[0])
                                 i += 1
                                 a[i] = float(t[1])
@@ -314,9 +320,9 @@ class ngspice_read(object):
                 continue
 
             else:
-                print('Error: strange line in rawfile:\n\t"'  \
-                      +line + '"\n\t load aborted')
-                return 0
+                print('Unsupported line in the rawfile:\n\t"'  \
+                      +line + '"\n')
+                #return 0
 
     def get_plots(self):
         return self.plots
@@ -326,7 +332,7 @@ if __name__ == "__main__":
     ## plot out some informations about the ngspice files given by commandline
     for f in sys.argv[1:]:
         print('The file: "' + f + '" contains the following plots:' )
-        for i,p in enumerate(spice_read(f).get_plots()):
+        for i,p in enumerate(ngspice_read(f).get_plots()):
             print('  Plot', i, 'with the attributes')
             print('    Title: ' , p.title)
             print('    Date: ', p.date)
